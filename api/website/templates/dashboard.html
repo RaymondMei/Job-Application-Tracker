@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% block content %}
+<h1>{{ dashboard.folderId }} - Dashboard</h1>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">Status</th>
+			<th scope="col">Company Name</th>
+			<th scope="col">Job Title</th>
+			<th scope="col">Resume</th>
+			<th scope="col">Date Applied</th>
+			<th scope="col">Salary</th>
+			<th scope="col">Location</th>
+			<th scope="col">Related Information</th>
+			<th scope="col">URLS</th>
+			<th scope="col">Contacts</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% if dashboard.apps %}{% for app in dashboard.apps %}
+		<tr>
+			<td scope="row">{{ app.status }}</td>
+			<td scope="row">{{ app.company_name }}</td>
+			<td scope="row">{{ app.job_title }}</td>
+			<td scope="row">{{ app.resume }}</td>
+			<td scope="row">{{ app.date_applied }}</td>
+			<td scope="row">{{ app.salary }}</td>
+			<td scope="row">{{ app.location }}</td>
+			<td scope="row">{{ app.related_information }}</td>
+			<td scope="row">{{ app.urls }}</td>
+			<td scope="row">{{ app.contacts }}</td>
+		</tr>
+		{% endfor %}{% endif %}
+	</tbody>
+</table>
+{% endblock %}
