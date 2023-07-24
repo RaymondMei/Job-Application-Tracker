@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 
 const pages = ["Dashboard", "Login", "Register"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -41,26 +42,26 @@ function ResponsiveAppBar() {
 	};
 
 	return (
-		<AppBar position="absolute">
-			<Container maxWidth="xl">
+		<AppBar position="sticky">
+			<Container maxWidth={false} sx={{ m: 0 }}>
 				<Toolbar disableGutters>
-					<AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+					<ListAltIcon sx={{ display: { xs: "none", md: "flex" }, mr: 3 }} />
 					<Typography
 						variant="h6"
 						noWrap
 						component="a"
 						href="/"
 						sx={{
-							mr: 2,
+							mr: 5,
 							display: { xs: "none", md: "flex" },
 							fontFamily: "monospace",
 							fontWeight: 700,
-							letterSpacing: ".3rem",
+							letterSpacing: ".1rem",
 							color: "inherit",
 							textDecoration: "none",
 						}}
 					>
-						LOGO
+						Job App Tracker
 					</Typography>
 
 					<Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -116,7 +117,7 @@ function ResponsiveAppBar() {
 							textDecoration: "none",
 						}}
 					>
-						LOGO
+						Job Application Tracker
 					</Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
 						{pages.map((page) => (
@@ -134,7 +135,7 @@ function ResponsiveAppBar() {
 
 					<Box sx={{ flexGrow: 0 }}>
 						<Tooltip title="Open settings">
-							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 1 }}>
 								<Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
 							</IconButton>
 						</Tooltip>
