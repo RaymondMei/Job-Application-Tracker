@@ -398,60 +398,28 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 	);
 }
 
-type EnhancedTableToolbarProps = {
-	onDelete: () => void;
-	numSelected: number;
-};
-
-function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-	const { onDelete, numSelected } = props;
-
+function EnhancedTableToolbar() {
 	return (
 		<Toolbar
 			sx={{
 				pl: { sm: 2 },
 				pr: { xs: 1, sm: 1 },
-				...(numSelected > 0 && {
-					bgcolor: (theme) =>
-						alpha(
-							theme.palette.primary.main,
-							theme.palette.action.activatedOpacity
-						),
-				}),
 			}}
 		>
-			{numSelected > 0 ? (
-				<Typography
-					sx={{ flex: "1 1 100%" }}
-					color="inherit"
-					variant="subtitle1"
-					component="div"
-				>
-					{numSelected} selected
-				</Typography>
-			) : (
-				<Typography
-					sx={{ flex: "1 1 100%" }}
-					variant="h6"
-					id="tableTitle"
-					component="div"
-				>
-					Applications
-				</Typography>
-			)}
-			{numSelected > 0 ? (
-				<Tooltip title="Delete">
-					<IconButton onClick={onDelete}>
-						<DeleteIcon />
-					</IconButton>
-				</Tooltip>
-			) : (
-				<Tooltip title="Filter list">
-					<IconButton>
-						<FilterListIcon />
-					</IconButton>
-				</Tooltip>
-			)}
+			<Typography
+				sx={{ flex: "1 1 100%" }}
+				variant="h6"
+				id="tableTitle"
+				component="div"
+			>
+				Applications
+			</Typography>
+
+			<Tooltip title="Filter list">
+				<IconButton>
+					<FilterListIcon />
+				</IconButton>
+			</Tooltip>
 		</Toolbar>
 	);
 }
@@ -502,10 +470,6 @@ export default function EnhancedTable() {
 		setSelected(newSelected);
 	};
 
-	const handleDeleteSelected = () => {
-		setSelected([]);
-	};
-
 	const handleChangePage = (event: unknown, newPage: number) => {
 		setPage(newPage);
 	};
@@ -539,10 +503,7 @@ export default function EnhancedTable() {
 	return (
 		<Box sx={{ width: "100%" }}>
 			<Paper sx={{ width: "100%", mb: 2 }}>
-				<EnhancedTableToolbar
-					onDelete={handleDeleteSelected}
-					numSelected={selected.length}
-				/>
+				<EnhancedTableToolbar />
 				<TableContainer>
 					<Table
 						sx={{ minWidth: 750 }}

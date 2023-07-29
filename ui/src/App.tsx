@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Grid } from "@mui/material";
+import { useState } from "react";
 
 const App = () => {
 	return (
@@ -15,7 +16,7 @@ const App = () => {
 					<Grid item xs={12}>
 						<ResponsiveAppBar />
 					</Grid>
-					<Grid item xs={12}>
+					<Grid item xs={12} sx={{ height: "calc(100vh - 68.5px)" }}>
 						<Routes>
 							<Route path="/login" element={<Login />} />
 							<Route path="/register" element={<Register />} />

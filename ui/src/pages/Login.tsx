@@ -20,8 +20,15 @@ export default function Login() {
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
+		fetch(`http://127.0.0.1:8000/login/`, {
+			method: "POST",
+			headers: {
+				"Content-type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
 		console.log({
-			email: data.get("email"),
+			username: data.get("username"),
 			password: data.get("password"),
 		});
 	};
@@ -33,7 +40,7 @@ export default function Login() {
 			direction="column"
 			justifyContent="center"
 			alignItems="center"
-			sx={{ minHeight: "100%" }}
+			sx={{ marginTop: -5, minHeight: "100%" }}
 		>
 			<Grid item>
 				<ThemeProvider theme={defaultTheme}>
@@ -53,17 +60,17 @@ export default function Login() {
 							<Box
 								component="form"
 								onSubmit={handleSubmit}
-								noValidate
+								// noValidate
 								sx={{ mt: 1 }}
 							>
 								<TextField
 									margin="normal"
 									required
 									fullWidth
-									id="email"
-									label="Email Address"
-									name="email"
-									autoComplete="email"
+									id="username"
+									label="Username"
+									name="username"
+									autoComplete="username"
 									autoFocus
 								/>
 								<TextField
