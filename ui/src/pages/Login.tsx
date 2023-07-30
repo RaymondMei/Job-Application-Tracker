@@ -12,25 +12,53 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios, { AxiosError } from "axios";
+import { useState } from "react";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Login() {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+type Props = {
+	handleLoginStatus: (isSuccessful: boolean) => void;
+};
+
+const Login = ({ handleLoginStatus }: Props) => {
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		fetch(`http://127.0.0.1:8000/login/`, {
-			method: "POST",
-			headers: {
-				"Content-type": "application/json",
-			},
-			body: JSON.stringify(data),
-		});
-		console.log({
-			username: data.get("username"),
-			password: data.get("password"),
-		});
+		// fetch(`http://127.0.0.1:8000/login/`, {
+		// 	method: "POST",
+		// 	headers: {
+		// 		"Content-type": "application/json",
+		// 	},
+		// 	body: JSON.stringify(data),
+		// });
+		// console.log({
+		// 	username: data.get("username"),
+		// 	password: data.get("password"),
+		// });
+
+		try {
+			const response = await axios({
+				method: "POST",
+				url: "http://127.0.0.1:8000/login/",
+				data: data,
+			});
+			if (response.data === "success") {
+				handleLoginStatus(true);
+			} else {
+				handleLoginStatus(false);
+			}
+		} catch (error: Error | AxiosError) {
+			if (error.response) {
+				console.log("response", error);
+			} else if (error.request) {
+				console.log("request", error);
+			} else {
+				console.log(error);
+			}
+			// console.log(error.config);
+		}
 	};
 
 	return (
@@ -102,4 +130,6 @@ export default function Login() {
 			</Grid>
 		</Grid>
 	);
-}
+};
+
+export default Login;

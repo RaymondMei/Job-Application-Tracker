@@ -14,11 +14,23 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import ListAltIcon from "@mui/icons-material/ListAlt";
+import { useState, useEffect } from "react";
 
-const pages = ["Dashboard", "Login", "Register"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
-const ResponsiveAppBar = () => {
+type Props = {
+	loggedIn: boolean;
+};
+
+const ResponsiveAppBar = ({ loggedIn }: Props) => {
+	const [pages, setPages] = useState<string[]>(
+		loggedIn ? ["Dashboard", "Register"] : ["Login", "Register"]
+	);
+
+	useEffect(() => {
+		setPages(loggedIn ? ["Dashboard", "Register"] : ["Login", "Register"]);
+	}, [loggedIn]);
+
 	const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
 		null
 	);

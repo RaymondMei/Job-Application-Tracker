@@ -345,7 +345,7 @@ type EnhancedTableProps = {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
 	const {
-		onSelectAllClick,
+		// onSelectAllClick,
 		order,
 		orderBy,
 		numSelected,
@@ -427,7 +427,7 @@ function EnhancedTableToolbar() {
 export default function EnhancedTable() {
 	const [order, setOrder] = React.useState<Order>("asc");
 	const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
-	const [selected, setSelected] = React.useState<readonly number[]>([]);
+	const [selected, setSelected] = React.useState<number>(-1);
 	const [page, setPage] = React.useState(0);
 	const [dense, setDense] = React.useState(false);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -441,20 +441,20 @@ export default function EnhancedTable() {
 		setOrderBy(property);
 	};
 
-	const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (event.target.checked) {
-			const newSelected = rows.map((n) => n.id);
-			setSelected(newSelected);
-			return;
-		}
-		setSelected([]);
-	};
+	// const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+	// 	if (event.target.checked) {
+	// 		const newSelected = rows.map((n) => n.id);
+	// 		setSelected(newSelected);
+	// 		return;
+	// 	}
+	// 	setSelected([]);
+	// };
 
 	const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
 		// const selectedIndex = selected.indexOf(name);
-		let newSelected: readonly number[] = [];
+		// let newSelected: readonly number[] = [];
 
-		newSelected = [id];
+		// newSelected = [id];
 		// if (selectedIndex === -1) {
 		// 	newSelected = newSelected.concat(selected, name);
 		// } else if (selectedIndex === 0) {
@@ -467,7 +467,7 @@ export default function EnhancedTable() {
 		// 		selected.slice(selectedIndex + 1)
 		// 	);
 		// }
-		setSelected(newSelected);
+		setSelected(id == selected ? -1 : id);
 	};
 
 	const handleChangePage = (event: unknown, newPage: number) => {
@@ -485,7 +485,8 @@ export default function EnhancedTable() {
 		setDense(event.target.checked);
 	};
 
-	const isSelected = (id: number) => selected.indexOf(id) !== -1;
+	// const isSelected = (id: number) => selected.indexOf(id) !== -1;
+	const isSelected = (id: number) => id == selected;
 
 	// Avoid a layout jump when reaching the last page with empty rows.
 	const emptyRows =
@@ -511,10 +512,11 @@ export default function EnhancedTable() {
 						size={dense ? "small" : "medium"}
 					>
 						<EnhancedTableHead
-							numSelected={selected.length}
+							// numSelected={selected.length}
+							numSelected={1}
 							order={order}
 							orderBy={orderBy}
-							onSelectAllClick={handleSelectAllClick}
+							// onSelectAllClick={handleSelectAllClick}
 							onRequestSort={handleRequestSort}
 							rowCount={rows.length}
 						/>

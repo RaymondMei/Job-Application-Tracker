@@ -12,18 +12,44 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Register() {
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+type Props = {
+	handleLoginStatus: (isSuccessful: boolean) => void;
+};
+
+export default function Register({ handleLoginStatus }: Props) {
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		console.log({
-			email: data.get("email"),
-			password: data.get("password"),
-		});
+		// console.log({
+		// 	email: data.get("email"),
+		// 	password: data.get("password"),
+		// });
+		try {
+			const response = await axios({
+				method: "POST",
+				url: "http://127.0.0.1:8000/login/",
+				data: data,
+			});
+			if (response.data === "success") {
+				handleLoginStatus(true);
+			} else {
+				handleLoginStatus(false);
+			}
+		} catch (error: Error | AxiosError) {
+			if (error.response) {
+				console.log("response", error);
+			} else if (error.request) {
+				console.log("request", error);
+			} else {
+				console.log(error);
+			}
+			// console.log(error.config);
+		}
 	};
 
 	return (
@@ -33,7 +59,7 @@ export default function Register() {
 			direction="column"
 			justifyContent="center"
 			alignItems="center"
-			sx={{ minHeight: "100%" }}
+			sx={{ marginTop: -5, minHeight: "100%" }}
 		>
 			<Grid item>
 				<ThemeProvider theme={defaultTheme}>
@@ -85,6 +111,7 @@ export default function Register() {
 									fullWidth
 									variant="contained"
 									sx={{ mt: 3, mb: 2 }}
+									disabled
 								>
 									Register
 								</Button>

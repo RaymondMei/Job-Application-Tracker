@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import datetime
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate, login, logout
 
 
 # Create your views here.
@@ -46,12 +47,30 @@ def get_routes(request):
 
 def index(request):
 	return render(request, 'index.html')
-	
+
+
+@api_view(['GET', 'POST'])
 def login_page(request):
-	return HttpResponse('hi')
+
+    if request.method == 'GET':
+        return Response('hi123')
+    elif request.method == 'POST':
+        requestData = request.data
+        username = requestData['username']
+        password = requestData['password']
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return Response('success')
+        else:
+            return Response('fail')
+    else:
+        return Response('invalid method')
+
 
 def register_page(request):
-	return render(request, 'register_page.html', {})
+	return Response('hi2')
 
 def dashboard(request, folderId=1):
 	placeholder_app = {'status': 'Applied', 'company_name': 'Google', 'job_title': 'Software Engineer', 'resume': 'Resume v1', 'date_applied': datetime.datetime.now(), 'salary': '$113 000', 'location': 'California', 'related_information': '-', 'urls': 'https://www.uber.com/ca/en/', 'contacts': '-'}
