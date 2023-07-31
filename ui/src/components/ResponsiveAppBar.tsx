@@ -138,7 +138,7 @@ const ResponsiveAppBar = ({ loggedIn }: Props) => {
 								onClick={handleCloseNavMenu}
 								sx={{ my: 2, color: "white", display: "block" }}
 								component={Link}
-								to={page}
+								to={page.toLowerCase()}
 							>
 								{page}
 							</Button>
@@ -148,7 +148,7 @@ const ResponsiveAppBar = ({ loggedIn }: Props) => {
 					<Box sx={{ flexGrow: 0 }}>
 						<Tooltip title="Open settings">
 							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0, mr: 1 }}>
-								<Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+								<Avatar alt="Remy Sharp" src="#" />
 							</IconButton>
 						</Tooltip>
 						<Menu

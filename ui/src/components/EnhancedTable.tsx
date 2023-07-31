@@ -20,6 +20,8 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 type Data = {
 	id: number;
@@ -39,190 +41,209 @@ type Data = {
 	// protein: number;
 };
 
-function createData(
-	id: number,
-	company_name: string,
-	job_title: string,
-	resume: string,
-	date_applied: string,
-	salary: number,
-	location: string,
-	related_information: string,
-	urls: string,
-	contacts: string
-	// name: string,
-	// calories: number,
-	// fat: number,
-	// carbs: number,
-	// protein: number
-): Data {
-	return {
-		id,
-		company_name,
-		job_title,
-		resume,
-		date_applied,
-		salary,
-		location,
-		related_information,
-		urls,
-		contacts,
-		// name,
-		// calories,
-		// fat,
-		// carbs,
-		// protein,
-	};
-}
+// function createData(
+// 	id: number,
+// 	company_name: string,
+// 	job_title: string,
+// 	resume: string,
+// 	date_applied: string,
+// 	salary: number,
+// 	location: string,
+// 	related_information: string,
+// 	urls: string,
+// 	contacts: string
+// 	// name: string,
+// 	// calories: number,
+// 	// fat: number,
+// 	// carbs: number,
+// 	// protein: number
+// ): Data {
+// 	return {
+// 		id,
+// 		company_name,
+// 		job_title,
+// 		resume,
+// 		date_applied,
+// 		salary,
+// 		location,
+// 		related_information,
+// 		urls,
+// 		contacts,
+// 		// name,
+// 		// calories,
+// 		// fat,
+// 		// carbs,
+// 		// protein,
+// 	};
+// }
 
-const rows = [
-	createData(
-		1,
-		"ABC Tech Solutions",
-		"Software Engineer",
-		"I am an experienced software engineer...",
-		new Date(2023, 7, 15).toString(),
-		85000,
-		"San Francisco, CA",
-		"Technical skills: Python, JavaScript, C++",
-		"www.example.com/job1",
-		"john.doe@example.com"
-	),
-	createData(
-		2,
-		"XYZ Software Development",
-		"Full Stack Developer",
-		"I have a strong background in web development...",
-		new Date(2023, 7, 16).toString(),
-		80000,
-		"Seattle, WA",
-		"Proficient in HTML, CSS, React, Node.js",
-		"www.example.com/job2",
-		"jane.smith@example.com"
-	),
-	createData(
-		3,
-		"DEF Innovations",
-		"Backend Developer",
-		"I specialize in building scalable APIs...",
-		new Date(2023, 7, 17).toString(),
-		90000,
-		"Austin, TX",
-		"Experienced with Django, Flask, PostgreSQL",
-		"www.example.com/job3",
-		"michael.johnson@example.com"
-	),
-	createData(
-		4,
-		"GHI Tech Co.",
-		"Mobile App Developer",
-		"I have developed several iOS and Android apps...",
-		new Date(2023, 7, 18).toString(),
-		95000,
-		"Los Angeles, CA",
-		"Proficient in Swift, Kotlin, and React Native",
-		"www.example.com/job4",
-		"susan.williams@example.com"
-	),
-	createData(
-		5,
-		"PQR Solutions",
-		"Frontend Developer",
-		"I have a passion for creating user-friendly interfaces...",
-		new Date(2023, 7, 19).toString(),
-		80000,
-		"New York, NY",
-		"Skilled in JavaScript, Vue.js, and UI/UX design",
-		"www.example.com/job5",
-		"robert.anderson@example.com"
-	),
-	createData(
-		6,
-		"MNO Software Systems",
-		"Machine Learning Engineer",
-		"I specialize in developing ML algorithms...",
-		new Date(2023, 7, 20).toString(),
-		100000,
-		"Chicago, IL",
-		"Experience with TensorFlow, PyTorch, and scikit-learn",
-		"www.example.com/job6",
-		"emily.jackson@example.com"
-	),
-	createData(
-		7,
-		"JKL Tech Solutions",
-		"DevOps Engineer",
-		"I have a strong background in automating CI/CD pipelines...",
-		new Date(2023, 7, 21).toString(),
-		90000,
-		"Denver, CO",
-		"Skilled in Jenkins, Docker, and Kubernetes",
-		"www.example.com/job7",
-		"william.adams@example.com"
-	),
-	createData(
-		8,
-		"UVW Innovations",
-		"Software Architect",
-		"I have designed and implemented complex software systems...",
-		new Date(2023, 7, 22).toString(),
-		110000,
-		"San Diego, CA",
-		"Extensive experience in system design and patterns",
-		"www.example.com/job8",
-		"olivia.martin@example.com"
-	),
-	createData(
-		9,
-		"RST Software Corp.",
-		"Embedded Systems Engineer",
-		"I have developed firmware for various embedded devices...",
-		new Date(2023, 7, 23).toString(),
-		85000,
-		"Portland, OR",
-		"Proficient in C/C++, RTOS, and microcontrollers",
-		"www.example.com/job9",
-		"david.green@example.com"
-	),
-	createData(
-		10,
-		"LMN Tech Services",
-		"Data Scientist",
-		"I am experienced in analyzing and interpreting large datasets...",
-		new Date(2023, 7, 24).toString(),
-		95000,
-		"Houston, TX",
-		"Skilled in Python, R, and data visualization",
-		"www.example.com/job10",
-		"sophia.morris@example.com"
-	),
-	createData(
-		11,
-		"Duplicate LMN Tech Services",
-		"Data Scientist",
-		"I am experienced in analyzing and interpreting large datasets...",
-		new Date(2023, 7, 24).toString(),
-		95000,
-		"Houston, TX",
-		"Skilled in Python, R, and data visualization",
-		"www.example.com/job10",
-		"sophia.morris@example.com"
-	),
+// const rows: object[] = [
+// createData(
+// 	1,
+// 	"ABC Tech Solutions",
+// 	"Software Engineer",
+// 	"I am an experienced software engineer...",
+// 	new Date(2023, 7, 15).toString(),
+// 	85000,
+// 	"San Francisco, CA",
+// 	"Technical skills: Python, JavaScript, C++",
+// 	"www.example.com/job1",
+// 	"john.doe@example.com"
+// ),
+// createData(
+// 	2,
+// 	"XYZ Software Development",
+// 	"Full Stack Developer",
+// 	"I have a strong background in web development...",
+// 	new Date(2023, 7, 16).toString(),
+// 	80000,
+// 	"Seattle, WA",
+// 	"Proficient in HTML, CSS, React, Node.js",
+// 	"www.example.com/job2",
+// 	"jane.smith@example.com"
+// ),
+// createData(
+// 	3,
+// 	"DEF Innovations",
+// 	"Backend Developer",
+// 	"I specialize in building scalable APIs...",
+// 	new Date(2023, 7, 17).toString(),
+// 	90000,
+// 	"Austin, TX",
+// 	"Experienced with Django, Flask, PostgreSQL",
+// 	"www.example.com/job3",
+// 	"michael.johnson@example.com"
+// ),
+// createData(
+// 	4,
+// 	"GHI Tech Co.",
+// 	"Mobile App Developer",
+// 	"I have developed several iOS and Android apps...",
+// 	new Date(2023, 7, 18).toString(),
+// 	95000,
+// 	"Los Angeles, CA",
+// 	"Proficient in Swift, Kotlin, and React Native",
+// 	"www.example.com/job4",
+// 	"susan.williams@example.com"
+// ),
+// createData(
+// 	5,
+// 	"PQR Solutions",
+// 	"Frontend Developer",
+// 	"I have a passion for creating user-friendly interfaces...",
+// 	new Date(2023, 7, 19).toString(),
+// 	80000,
+// 	"New York, NY",
+// 	"Skilled in JavaScript, Vue.js, and UI/UX design",
+// 	"www.example.com/job5",
+// 	"robert.anderson@example.com"
+// ),
+// createData(
+// 	6,
+// 	"MNO Software Systems",
+// 	"Machine Learning Engineer",
+// 	"I specialize in developing ML algorithms...",
+// 	new Date(2023, 7, 20).toString(),
+// 	100000,
+// 	"Chicago, IL",
+// 	"Experience with TensorFlow, PyTorch, and scikit-learn",
+// 	"www.example.com/job6",
+// 	"emily.jackson@example.com"
+// ),
+// createData(
+// 	7,
+// 	"JKL Tech Solutions",
+// 	"DevOps Engineer",
+// 	"I have a strong background in automating CI/CD pipelines...",
+// 	new Date(2023, 7, 21).toString(),
+// 	90000,
+// 	"Denver, CO",
+// 	"Skilled in Jenkins, Docker, and Kubernetes",
+// 	"www.example.com/job7",
+// 	"william.adams@example.com"
+// ),
+// createData(
+// 	8,
+// 	"UVW Innovations",
+// 	"Software Architect",
+// 	"I have designed and implemented complex software systems...",
+// 	new Date(2023, 7, 22).toString(),
+// 	110000,
+// 	"San Diego, CA",
+// 	"Extensive experience in system design and patterns",
+// 	"www.example.com/job8",
+// 	"olivia.martin@example.com"
+// ),
+// createData(
+// 	9,
+// 	"RST Software Corp.",
+// 	"Embedded Systems Engineer",
+// 	"I have developed firmware for various embedded devices...",
+// 	new Date(2023, 7, 23).toString(),
+// 	85000,
+// 	"Portland, OR",
+// 	"Proficient in C/C++, RTOS, and microcontrollers",
+// 	"www.example.com/job9",
+// 	"david.green@example.com"
+// ),
+// createData(
+// 	10,
+// 	"LMN Tech Services",
+// 	"Data Scientist",
+// 	"I am experienced in analyzing and interpreting large datasets...",
+// 	new Date(2023, 7, 24).toString(),
+// 	95000,
+// 	"Houston, TX",
+// 	"Skilled in Python, R, and data visualization",
+// 	"www.example.com/job10",
+// 	"sophia.morris@example.com"
+// ),
+// createData(
+// 	11,
+// 	"Duplicate LMN Tech Services",
+// 	"Data Scientist",
+// 	"I am experienced in analyzing and interpreting large datasets...",
+// 	new Date(2023, 7, 24).toString(),
+// 	95000,
+// 	"Houston, TX",
+// 	"Skilled in Python, R, and data visualization",
+// 	"www.example.com/job10",
+// 	"sophia.morris@example.com"
+// ),
+// createData("Cupcake", 305, 3.7, 67, 4.3),
+// createData("Donut", 452, 25.0, 51, 4.9),
+// createData("Eclair", 262, 16.0, 24, 6.0),
+// createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+// createData("Gingerbread", 356, 16.0, 49, 3.9),
+// createData("Honeycomb", 408, 3.2, 87, 6.5),
+// createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+// createData("Jelly Bean", 375, 0.0, 94, 0.0),
+// createData("KitKat", 518, 26.0, 65, 7.0),
+// createData("Lollipop", 392, 0.2, 98, 0.0),
+// createData("Marshmallow", 318, 0, 81, 2.0),
+// createData("Nougat", 360, 19.0, 9, 37.0),
+// createData("Oreo", 437, 18.0, 63, 4.0),
+// ];
 
-	// createData("Cupcake", 305, 3.7, 67, 4.3),
-	// createData("Donut", 452, 25.0, 51, 4.9),
-	// createData("Eclair", 262, 16.0, 24, 6.0),
-	// createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-	// createData("Gingerbread", 356, 16.0, 49, 3.9),
-	// createData("Honeycomb", 408, 3.2, 87, 6.5),
-	// createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-	// createData("Jelly Bean", 375, 0.0, 94, 0.0),
-	// createData("KitKat", 518, 26.0, 65, 7.0),
-	// createData("Lollipop", 392, 0.2, 98, 0.0),
-	// createData("Marshmallow", 318, 0, 81, 2.0),
-	// createData("Nougat", 360, 19.0, 9, 37.0),
-	// createData("Oreo", 437, 18.0, 63, 4.0),
-];
+// useEffect(() => {
+// 	const getLoginStatus = async () => {
+// 		try {
+// 			const response = await axios({
+// 				method: "GET",
+// 				url: "http://127.0.0.1:8000/login/",
+// 			});
+// 			if (response.data === "success") {
+// 				setLoggedIn(true);
+// 			} else {
+// 				setLoggedIn(false);
+// 			}
+// 		} catch (error) {
+// 			console.log(error);
+// 			setLoggedIn(false);
+// 		}
+// 	};
+// 	getLoginStatus();
+// }, []);
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 	if (b[orderBy] < a[orderBy]) {
@@ -348,8 +369,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 		// onSelectAllClick,
 		order,
 		orderBy,
-		numSelected,
-		rowCount,
+		// numSelected,
+		// rowCount,
 		onRequestSort,
 	} = props;
 	const createSortHandler =
@@ -425,6 +446,27 @@ function EnhancedTableToolbar() {
 }
 
 export default function EnhancedTable() {
+	const [rows, setRows] = useState([]);
+
+	const getDashboardData = async () => {
+		try {
+			const response = await axios({
+				method: "GET",
+				url: "http://127.0.0.1:8000/dashboard/",
+			});
+			if (response.status == 200) {
+				// console.log(response.data);
+				setRows(response.data ?? []);
+			}
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
+
+	useEffect(() => {
+		getDashboardData();
+	}, []);
+
 	const [order, setOrder] = React.useState<Order>("asc");
 	const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
 	const [selected, setSelected] = React.useState<number>(-1);
@@ -498,7 +540,7 @@ export default function EnhancedTable() {
 				page * rowsPerPage,
 				page * rowsPerPage + rowsPerPage
 			),
-		[order, orderBy, page, rowsPerPage]
+		[rows, order, orderBy, page, rowsPerPage]
 	);
 
 	return (
