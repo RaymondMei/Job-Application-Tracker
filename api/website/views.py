@@ -77,5 +77,5 @@ def dashboard(request, folderId=1):
 	# dashboard = {'folderId': folderId, 'apps' : [placeholder_app, placeholder_app]}
 	# return render(request, 'dashboard.html', {'dashboard': dashboard})
     application = [{'id': 1, 'company_name': "ABC Tech Solutions", 'job_title': "Software Engineer", 'resume': "I am an experienced software engineer...", 'date_applied': '7/15/2023', 'salary': 85000, 'location': "San Francisco, CA", 'related_information': "Technical skills: Python, JavaScript, C++", 'urls': "www.example.com/job1", 'contacts': "john.doe@example.com"},
-    {'id': 2, 'company_name': "ABC Tech Solutions", 'job_title': "Software Engineer", 'resume': "I am an experienced software engineer...", 'date_applied': '7/15/2023', 'salary': 85000, 'location': "San Francisco, CA", 'related_information': "Technical skills: Python, JavaScript, C++", 'urls': "www.example.com/job1", 'contacts': "john.doe@example.com"}]
+    {'id': 3, 'company_name': "ABC Tech Solutions", 'job_title': "Software Engineer", 'resume': "I am an experienced software engineer...", 'date_applied': '7/15/2023', 'salary': 85000, 'location': "San Francisco, CA", 'related_information': "Technical skills: Python, JavaScript, C++", 'urls': "www.example.com/job1", 'contacts': "john.doe@example.com"}]
     return Response(application)

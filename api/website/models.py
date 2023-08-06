@@ -8,8 +8,8 @@ class Audit_Field(models.Model):
 	created_date = models.DateField(auto_now_add=True)
 	updated_by = models.CharField()
 	updated_date = models.DateField(auto_now=True)
-	deleted_by = models.CharField()
-	deleted_date = models.DateField()
+	deleted_by = models.CharField(null=True)
+	deleted_date = models.DateField(null=True)
 
 	def __str__(self):
 		return " - ".join(deleted, created_by, created_date, updated_by, updated_date, deleted_by, deleted_date)
@@ -27,7 +27,7 @@ class User(models.Model):
 	user_id = models.AutoField(primary_key=True)
 	username = models.CharField(unique=True, max_length=50, null=False, blank=False)
 	password = models.CharField(max_length=50, null=False, blank=False)
-	email = models.EmailField()
+	email = models.EmailField(null=True)
 
 	audit_fields = models.ForeignKey(Audit_Field, models.CASCADE)
 
@@ -37,9 +37,9 @@ class User(models.Model):
 class Company(models.Model):
 	company_id = models.AutoField(primary_key=True)
 	company_name = models.CharField(max_length=50, null=False, blank=False)
-	location = models.CharField()
-	website = models.URLField()
-	contacts = models.TextField()
+	location = models.CharField(null=True)
+	website = models.URLField(null=True)
+	contact = models.TextField(null=True)
 
 	audit_fields = models.ForeignKey(Audit_Field, models.CASCADE)
 
@@ -48,14 +48,12 @@ class Company(models.Model):
 
 class Job(models.Model):
 	job_id = models.AutoField(primary_key=True)
-	user_id = models.ForeignKey(User, models.CASCADE)
-	folder_id = models.ForeignKey(Folder, models.CASCADE)
-	company_id = models.ForeignKey(Company, models.CASCADE)
+	company = models.ForeignKey(Company, models.CASCADE)
 	job_title = models.CharField(max_length=100, null=False, blank=False)
 	job_description = models.TextField(null=True, blank=True)
-	job_URL = models.URLField()
+	job_url = models.URLField(null=True)
 	salary = models.DecimalField(max_digits=15, decimal_places=2)
-	job_notes = models.TextField()
+	job_notes = models.TextField(null=True)
 
 	audit_fields = models.ForeignKey(Audit_Field, models.CASCADE)
 
@@ -64,7 +62,9 @@ class Job(models.Model):
 	
 class Application(models.Model):
 	application_id = models.AutoField(primary_key=True)
-	job_id = models.ForeignKey(Job, models.CASCADE)
+	user = models.ForeignKey(User, models.CASCADE)
+	folder = models.ForeignKey(Folder, models.CASCADE)
+	job = models.ForeignKey(Job, models.CASCADE)
 	status = models.CharField(max_length=25, null=False, blank=False)
 	resume = models.FileField(upload_to='resumes/')
 	date_applied = models.DateField()
