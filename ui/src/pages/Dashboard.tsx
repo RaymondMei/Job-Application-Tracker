@@ -13,7 +13,8 @@ const Dashboard = () => {
 					gutterBottom
 					sx={{ marginTop: theme.spacing(3) }}
 				>
-					Dashboard
+					{/* Dashboard */}
+					Spring 2023
 				</Typography>
 				<EnhancedTable />
 			</Grid>

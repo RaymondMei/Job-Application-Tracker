@@ -8,6 +8,7 @@ import Register from "./pages/Register";
 import { Button, Grid, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import FormDialogModal from "./components/FormDialogModal";
 
 const App = () => {
 	const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -44,6 +45,7 @@ const App = () => {
 						>
 							{loggedIn.toString()}
 						</Button>
+						<FormDialogModal />
 					</Grid>
 					<Grid item xs={12} sx={{ height: "calc(100vh - 68.5px)" }}>
 						<Routes>

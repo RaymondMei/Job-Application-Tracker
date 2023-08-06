@@ -19,9 +19,11 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import AddIcon from "@mui/icons-material/Add";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import FormDialogModal from "./FormDialogModal";
 
 type Data = {
 	id: number;
@@ -306,7 +308,7 @@ const headCells: readonly HeadCell[] = [
 		id: "company_name",
 		numeric: false,
 		disablePadding: true,
-		label: "Company Name",
+		label: "Company",
 	},
 	{
 		id: "job_title",
@@ -419,7 +421,11 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 	);
 }
 
-function EnhancedTableToolbar() {
+type EnhancedTableToolbarProps = {
+	handleCreate: () => void;
+};
+
+function EnhancedTableToolbar({ handleCreate }: EnhancedTableToolbarProps) {
 	return (
 		<Toolbar
 			sx={{
@@ -435,10 +441,15 @@ function EnhancedTableToolbar() {
 			>
 				Applications
 			</Typography>
-
 			<Tooltip title="Filter list">
 				<IconButton>
 					<FilterListIcon />
+				</IconButton>
+			</Tooltip>
+
+			<Tooltip title="Create">
+				<IconButton onClick={handleCreate}>
+					<AddIcon />
 				</IconButton>
 			</Tooltip>
 		</Toolbar>
@@ -455,7 +466,6 @@ export default function EnhancedTable() {
 				url: "http://127.0.0.1:8000/dashboard/",
 			});
 			if (response.status == 200) {
-				// console.log(response.data);
 				setRows(response.data ?? []);
 			}
 		} catch (error) {
@@ -466,6 +476,18 @@ export default function EnhancedTable() {
 	useEffect(() => {
 		getDashboardData();
 	}, []);
+
+	const [formDialogOpen, setFormDialogOpen] = useState<boolean>(false);
+
+	const handleFormDialogClose = () => {
+		setFormDialogOpen(false);
+		setSelected(-1);
+	};
+
+	const handleCreate = () => {
+		setFormDialogOpen(true);
+		setSelected(-1);
+	};
 
 	const [order, setOrder] = React.useState<Order>("asc");
 	const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
@@ -509,6 +531,7 @@ export default function EnhancedTable() {
 		// 		selected.slice(selectedIndex + 1)
 		// 	);
 		// }
+		setFormDialogOpen(true);
 		setSelected(id == selected ? -1 : id);
 	};
 
@@ -546,7 +569,12 @@ export default function EnhancedTable() {
 	return (
 		<Box sx={{ width: "100%" }}>
 			<Paper sx={{ width: "100%", mb: 2 }}>
-				<EnhancedTableToolbar />
+				<FormDialogModal
+					application_id={selected}
+					formDialogOpen={formDialogOpen}
+					handleDialogClose={handleFormDialogClose}
+				/>
+				<EnhancedTableToolbar handleCreate={handleCreate} />
 				<TableContainer>
 					<Table
 						sx={{ minWidth: 750 }}
