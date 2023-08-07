@@ -6,6 +6,7 @@ import {
 	CssBaseline,
 	FormControlLabel,
 	Grid,
+	InputAdornment,
 	ThemeProvider,
 	Typography,
 } from "@mui/material";
@@ -163,6 +164,11 @@ const FormDialogModal = ({
 								<TextField
 									margin="normal"
 									fullWidth
+									InputProps={{
+										startAdornment: (
+											<InputAdornment position="start">$</InputAdornment>
+										),
+									}}
 									id="salary"
 									label="Salary"
 									defaultValue={data.salary}
@@ -224,7 +230,7 @@ const FormDialogModal = ({
 									margin="normal"
 									fullWidth
 									id="related_information"
-									label="Related Information"
+									label="Relevant Information"
 									defaultValue={data.related_information}
 								/>
 							</Grid>

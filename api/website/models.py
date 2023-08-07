@@ -12,7 +12,7 @@ class Audit_Field(models.Model):
 	deleted_date = models.DateField(null=True)
 
 	def __str__(self):
-		return " - ".join(deleted, created_by, created_date, updated_by, updated_date, deleted_by, deleted_date)
+		return " - ".join(self.deleted, self.created_by, self.created_date, self.updated_by, self.updated_date, self.deleted_by, self.deleted_date)
 
 class Folder(models.Model):
 	folder_id = models.AutoField(primary_key=True)
@@ -44,7 +44,7 @@ class Company(models.Model):
 	audit_fields = models.ForeignKey(Audit_Field, models.CASCADE)
 
 	def __str__(self):
-		return company_name
+		return self.company_name
 
 class Job(models.Model):
 	job_id = models.AutoField(primary_key=True)
@@ -74,4 +74,4 @@ class Application(models.Model):
 	audit_fields = models.ForeignKey(Audit_Field, models.CASCADE)
 
 	def __str__(self):
-		return "application with id: " + application_id
+		return "application with id: " + str(self.application_id)

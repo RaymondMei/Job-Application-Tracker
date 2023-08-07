@@ -26,21 +26,14 @@ import { useEffect, useState } from "react";
 import FormDialogModal from "./FormDialogModal";
 
 type Data = {
-	id: number;
+	status: number;
 	company_name: string;
 	job_title: string;
 	resume: string;
-	date_applied: string;
 	salary: number;
-	location: string;
+	date_applied: string;
+	deadline: string;
 	related_information: string;
-	urls: string;
-	contacts: string;
-	// calories: number;
-	// carbs: number;
-	// fat: number;
-	// name: string;
-	// protein: number;
 };
 
 // function createData(
@@ -299,10 +292,10 @@ type HeadCell = {
 
 const headCells: readonly HeadCell[] = [
 	{
-		id: "id",
+		id: "status",
 		numeric: false,
 		disablePadding: true,
-		label: "Id",
+		label: "Status",
 	},
 	{
 		id: "company_name",
@@ -323,34 +316,28 @@ const headCells: readonly HeadCell[] = [
 		label: "Resume",
 	},
 	{
-		id: "date_applied",
-		numeric: false,
-		disablePadding: true,
-		label: "Date Applied",
-	},
-	{
 		id: "salary",
 		numeric: false,
 		disablePadding: true,
 		label: "Salary",
 	},
 	{
-		id: "location",
+		id: "date_applied",
 		numeric: false,
 		disablePadding: true,
-		label: "Related Information",
+		label: "Date Applied",
 	},
 	{
-		id: "urls",
+		id: "deadline",
 		numeric: false,
 		disablePadding: true,
-		label: "URLs",
+		label: "Deadline",
 	},
 	{
-		id: "contacts",
+		id: "related_information",
 		numeric: false,
 		disablePadding: true,
-		label: "Contacts",
+		label: "Relevant Information",
 	},
 ];
 
@@ -596,44 +583,36 @@ export default function EnhancedTable() {
 								const labelId = `enhanced-table-checkbox-${index}`;
 
 								return (
-									<TableRow
-										hover
-										onClick={(event) => handleClick(event, row.id)}
-										role="checkbox"
-										aria-checked={isItemSelected}
-										tabIndex={-1}
-										key={row.id}
-										selected={isItemSelected}
-										sx={{ cursor: "pointer" }}
-									>
-										<TableCell padding="checkbox">
-											{/* <Checkbox
+									<Tooltip title={row.application_id}>
+										<TableRow
+											hover
+											onClick={(event) => handleClick(event, row.id)}
+											role="checkbox"
+											aria-checked={isItemSelected}
+											tabIndex={-1}
+											key={row.id}
+											selected={isItemSelected}
+											sx={{ cursor: "pointer" }}
+										>
+											<TableCell padding="checkbox">
+												{/* <Checkbox
 												color="primary"
 												checked={isItemSelected}
 												inputProps={{
 													"aria-labelledby": labelId,
 												}}
 											/> */}
-										</TableCell>
-										<TableCell
-											component="th"
-											id={labelId}
-											scope="row"
-											padding="none"
-										>
-											{row.id}
-										</TableCell>
-										<TableCell align="right">{row.company_name}</TableCell>
-										<TableCell align="right">{row.job_title}</TableCell>
-										<TableCell align="right">{row.resume}</TableCell>
-										<TableCell align="right">{row.date_applied}</TableCell>
-										<TableCell align="right">{row.salary}</TableCell>
-										<TableCell align="right">
-											{row.related_information}
-										</TableCell>
-										<TableCell align="right">{row.urls}</TableCell>
-										<TableCell align="right">{row.contacts}</TableCell>
-									</TableRow>
+											</TableCell>
+											<TableCell>{row.status}</TableCell>
+											<TableCell>{row.job.company.company_name}</TableCell>
+											<TableCell>{row.job.job_title}</TableCell>
+											<TableCell>{row.resume}</TableCell>
+											<TableCell>{row.job.salary}</TableCell>
+											<TableCell>{row.date_applied}</TableCell>
+											<TableCell>{row.deadline}</TableCell>
+											<TableCell>{row.related_information}</TableCell>
+										</TableRow>
+									</Tooltip>
 								);
 							})}
 							{emptyRows > 0 && (
