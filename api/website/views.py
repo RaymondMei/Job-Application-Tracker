@@ -50,23 +50,14 @@ def register_page(request):
 
 @api_view(['GET'])
 def dashboard(request, folderId=1):
-	# placeholder_app = {'status': 'Applied', 'company_name': 'Google', 'job_title': 'Software Engineer', 'resume': 'Resume v1', 'date_applied': datetime.datetime.now(), 'salary': '$113 000', 'location': 'California', 'related_information': '-', 'urls': 'https://www.uber.com/ca/en/', 'contacts': '-'}
-	# dashboard = {'folderId': folderId, 'apps' : [placeholder_app, placeholder_app]}
-	# return render(request, 'dashboard.html', {'dashboard': dashboard})
-    # application = [{'id': 1, 'company_name': "ABC Tech Solutions", 'job_title': "Software Engineer", 'resume': "I am an experienced software engineer...", 'date_applied': '7/15/2023', 'salary': 85000, 'location': "San Francisco, CA", 'related_information': "Technical skills: Python, JavaScript, C++", 'urls': "www.example.com/job1", 'contacts': "john.doe@example.com"},
-    # {'id': 3, 'company_name': "ABC Tech Solutions", 'job_title': "Software Engineer", 'resume': "I am an experienced software engineer...", 'date_applied': '7/15/2023', 'salary': 85000, 'location': "San Francisco, CA", 'related_information': "Technical skills: Python, JavaScript, C++", 'urls': "www.example.com/job1", 'contacts': "john.doe@example.com"}]
     applications = Application.objects.all()
 
-    # for app in applications:
-    #     user = User.objects.get(pk=app.user_id)
-    #     folder = Folder.objects.get(pk=app.folder_id)
-    #     job = Job.objects.get(pk=app.job_id)
-    #     company = Company.objects.get(pk=job.company_id)
-
-    #     userSerializer = UserSerializer(user)
-    #     folderSerializer = FolderSerializer(folder)
-    #     jobSerializer = JobSerializer(job)
-    #     companySerializer = CompanySerializer(company)
-
     serializer = ApplicationSerializer(applications, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_application(request, application_id=None):
+    applications = Application.objects.get(pk=application_id)
+
+    serializer = ApplicationSerializer(applications)
     return Response(serializer.data)

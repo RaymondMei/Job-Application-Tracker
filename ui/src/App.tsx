@@ -45,7 +45,6 @@ const App = () => {
 						>
 							{loggedIn.toString()}
 						</Button>
-						<FormDialogModal />
 					</Grid>
 					<Grid item xs={12} sx={{ height: "calc(100vh - 68.5px)" }}>
 						<Routes>

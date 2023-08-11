@@ -24,8 +24,10 @@ import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import FormDialogModal from "./FormDialogModal";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 type Data = {
+	id: number;
 	status: number;
 	company_name: string;
 	job_title: string;
@@ -36,189 +38,44 @@ type Data = {
 	related_information: string;
 };
 
-// function createData(
-// 	id: number,
-// 	company_name: string,
-// 	job_title: string,
-// 	resume: string,
-// 	date_applied: string,
-// 	salary: number,
-// 	location: string,
-// 	related_information: string,
-// 	urls: string,
-// 	contacts: string
-// 	// name: string,
-// 	// calories: number,
-// 	// fat: number,
-// 	// carbs: number,
-// 	// protein: number
-// ): Data {
-// 	return {
-// 		id,
-// 		company_name,
-// 		job_title,
-// 		resume,
-// 		date_applied,
-// 		salary,
-// 		location,
-// 		related_information,
-// 		urls,
-// 		contacts,
-// 		// name,
-// 		// calories,
-// 		// fat,
-// 		// carbs,
-// 		// protein,
-// 	};
-// }
-
-// const rows: object[] = [
-// createData(
-// 	1,
-// 	"ABC Tech Solutions",
-// 	"Software Engineer",
-// 	"I am an experienced software engineer...",
-// 	new Date(2023, 7, 15).toString(),
-// 	85000,
-// 	"San Francisco, CA",
-// 	"Technical skills: Python, JavaScript, C++",
-// 	"www.example.com/job1",
-// 	"john.doe@example.com"
-// ),
-// createData(
-// 	2,
-// 	"XYZ Software Development",
-// 	"Full Stack Developer",
-// 	"I have a strong background in web development...",
-// 	new Date(2023, 7, 16).toString(),
-// 	80000,
-// 	"Seattle, WA",
-// 	"Proficient in HTML, CSS, React, Node.js",
-// 	"www.example.com/job2",
-// 	"jane.smith@example.com"
-// ),
-// createData(
-// 	3,
-// 	"DEF Innovations",
-// 	"Backend Developer",
-// 	"I specialize in building scalable APIs...",
-// 	new Date(2023, 7, 17).toString(),
-// 	90000,
-// 	"Austin, TX",
-// 	"Experienced with Django, Flask, PostgreSQL",
-// 	"www.example.com/job3",
-// 	"michael.johnson@example.com"
-// ),
-// createData(
-// 	4,
-// 	"GHI Tech Co.",
-// 	"Mobile App Developer",
-// 	"I have developed several iOS and Android apps...",
-// 	new Date(2023, 7, 18).toString(),
-// 	95000,
-// 	"Los Angeles, CA",
-// 	"Proficient in Swift, Kotlin, and React Native",
-// 	"www.example.com/job4",
-// 	"susan.williams@example.com"
-// ),
-// createData(
-// 	5,
-// 	"PQR Solutions",
-// 	"Frontend Developer",
-// 	"I have a passion for creating user-friendly interfaces...",
-// 	new Date(2023, 7, 19).toString(),
-// 	80000,
-// 	"New York, NY",
-// 	"Skilled in JavaScript, Vue.js, and UI/UX design",
-// 	"www.example.com/job5",
-// 	"robert.anderson@example.com"
-// ),
-// createData(
-// 	6,
-// 	"MNO Software Systems",
-// 	"Machine Learning Engineer",
-// 	"I specialize in developing ML algorithms...",
-// 	new Date(2023, 7, 20).toString(),
-// 	100000,
-// 	"Chicago, IL",
-// 	"Experience with TensorFlow, PyTorch, and scikit-learn",
-// 	"www.example.com/job6",
-// 	"emily.jackson@example.com"
-// ),
-// createData(
-// 	7,
-// 	"JKL Tech Solutions",
-// 	"DevOps Engineer",
-// 	"I have a strong background in automating CI/CD pipelines...",
-// 	new Date(2023, 7, 21).toString(),
-// 	90000,
-// 	"Denver, CO",
-// 	"Skilled in Jenkins, Docker, and Kubernetes",
-// 	"www.example.com/job7",
-// 	"william.adams@example.com"
-// ),
-// createData(
-// 	8,
-// 	"UVW Innovations",
-// 	"Software Architect",
-// 	"I have designed and implemented complex software systems...",
-// 	new Date(2023, 7, 22).toString(),
-// 	110000,
-// 	"San Diego, CA",
-// 	"Extensive experience in system design and patterns",
-// 	"www.example.com/job8",
-// 	"olivia.martin@example.com"
-// ),
-// createData(
-// 	9,
-// 	"RST Software Corp.",
-// 	"Embedded Systems Engineer",
-// 	"I have developed firmware for various embedded devices...",
-// 	new Date(2023, 7, 23).toString(),
-// 	85000,
-// 	"Portland, OR",
-// 	"Proficient in C/C++, RTOS, and microcontrollers",
-// 	"www.example.com/job9",
-// 	"david.green@example.com"
-// ),
-// createData(
-// 	10,
-// 	"LMN Tech Services",
-// 	"Data Scientist",
-// 	"I am experienced in analyzing and interpreting large datasets...",
-// 	new Date(2023, 7, 24).toString(),
-// 	95000,
-// 	"Houston, TX",
-// 	"Skilled in Python, R, and data visualization",
-// 	"www.example.com/job10",
-// 	"sophia.morris@example.com"
-// ),
-// createData(
-// 	11,
-// 	"Duplicate LMN Tech Services",
-// 	"Data Scientist",
-// 	"I am experienced in analyzing and interpreting large datasets...",
-// 	new Date(2023, 7, 24).toString(),
-// 	95000,
-// 	"Houston, TX",
-// 	"Skilled in Python, R, and data visualization",
-// 	"www.example.com/job10",
-// 	"sophia.morris@example.com"
-// ),
-// createData("Cupcake", 305, 3.7, 67, 4.3),
-// createData("Donut", 452, 25.0, 51, 4.9),
-// createData("Eclair", 262, 16.0, 24, 6.0),
-// createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-// createData("Gingerbread", 356, 16.0, 49, 3.9),
-// createData("Honeycomb", 408, 3.2, 87, 6.5),
-// createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-// createData("Jelly Bean", 375, 0.0, 94, 0.0),
-// createData("KitKat", 518, 26.0, 65, 7.0),
-// createData("Lollipop", 392, 0.2, 98, 0.0),
-// createData("Marshmallow", 318, 0, 81, 2.0),
-// createData("Nougat", 360, 19.0, 9, 37.0),
-// createData("Oreo", 437, 18.0, 63, 4.0),
-// ];
+type Row = {
+	application_id: number;
+	status: string;
+	user: {
+		user_id: number;
+		username: string;
+		password: string;
+		email: string;
+		audit_fields: number;
+	};
+	folder: {
+		folder_id: number;
+		folder_name: string;
+		audit_fields: number;
+	};
+	job: {
+		job_id: number;
+		company: {
+			company_id: number;
+			company_name: string;
+			location: string;
+			website: string;
+			contact: null | string;
+			audit_fields: number;
+		};
+		job_title: string;
+		job_description: string;
+		job_url: string;
+		salary: string;
+		job_notes: string;
+		audit_fields: number;
+	};
+	resume: string;
+	date_applied: string;
+	deadline: string;
+	related_information: string;
+	audit_fields: number;
+};
 
 // useEffect(() => {
 // 	const getLoginStatus = async () => {
@@ -268,8 +125,8 @@ function getComparator<Key extends keyof any>(
 // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
 // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
 // with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-	array: readonly T[],
+function stableSort<Row>(
+	array: readonly Row[],
 	comparator: (a: T, b: T) => number
 ) {
 	const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
@@ -289,7 +146,6 @@ type HeadCell = {
 	label: string;
 	numeric: boolean;
 };
-
 const headCells: readonly HeadCell[] = [
 	{
 		id: "status",
@@ -347,7 +203,7 @@ type EnhancedTableProps = {
 		event: React.MouseEvent<unknown>,
 		property: keyof Data
 	) => void;
-	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	// onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	order: Order;
 	orderBy: string;
 	rowCount: number;
@@ -443,8 +299,22 @@ function EnhancedTableToolbar({ handleCreate }: EnhancedTableToolbarProps) {
 	);
 }
 
+export type ApplicationData = {
+	application_id: number;
+	status: string;
+	job_title: string;
+	company_name: string;
+	location: string;
+	salary: number;
+	post_url: string;
+	date_applied: string;
+	deadline: string;
+	resume: string;
+	related_information: string;
+};
+
 export default function EnhancedTable() {
-	const [rows, setRows] = useState([]);
+	const [rows, setRows] = useState<readonly Row[]>([]);
 
 	const getDashboardData = async () => {
 		try {
@@ -501,6 +371,50 @@ export default function EnhancedTable() {
 	// 	setSelected([]);
 	// };
 
+	const [initialFormData, setInitialFormData] =
+		useState<null | ApplicationData>(null);
+	const getInitialFormData = async (application_id: number) => {
+		try {
+			const response = await axios({
+				method: "GET",
+				url: `http://127.0.0.1:8000/applications/${application_id}`,
+			});
+			if (response.status == 200) {
+				if (response.data) {
+					setInitialFormData({
+						application_id: response.data.application_id,
+						status: response.data.status,
+						job_title: response.data.job.job_title,
+						company_name: response.data.job.company.company_name,
+						location: response.data.job.company.location,
+						salary: response.data.job.salary,
+						post_url: response.data.job.job_url,
+						date_applied: response.data.date_applied,
+						deadline: response.data.deadline,
+						resume: response.data.resume,
+						related_information: response.data.related_information,
+					});
+				} else {
+					setInitialFormData({
+						application_id: -1,
+						status: "Not Applied",
+						job_title: "",
+						company_name: "",
+						location: "",
+						salary: 0,
+						post_url: "",
+						date_applied: "",
+						deadline: "",
+						resume: "",
+						related_information: "",
+					});
+				}
+			}
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
+
 	const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
 		// const selectedIndex = selected.indexOf(name);
 		// let newSelected: readonly number[] = [];
@@ -518,8 +432,11 @@ export default function EnhancedTable() {
 		// 		selected.slice(selectedIndex + 1)
 		// 	);
 		// }
+		setSelected(id === selected ? -1 : id);
+
 		setFormDialogOpen(true);
-		setSelected(id == selected ? -1 : id);
+
+		getInitialFormData(id);
 	};
 
 	const handleChangePage = (event: unknown, newPage: number) => {
@@ -538,13 +455,13 @@ export default function EnhancedTable() {
 	};
 
 	// const isSelected = (id: number) => selected.indexOf(id) !== -1;
-	const isSelected = (id: number) => id == selected;
+	const isSelected = (id: number) => id === selected;
 
 	// Avoid a layout jump when reaching the last page with empty rows.
 	const emptyRows =
 		page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-	const visibleRows = React.useMemo(
+	const visibleRows: Row[] = React.useMemo(
 		() =>
 			stableSort(rows, getComparator(order, orderBy)).slice(
 				page * rowsPerPage,
@@ -553,14 +470,33 @@ export default function EnhancedTable() {
 		[rows, order, orderBy, page, rowsPerPage]
 	);
 
-	return (
-		<Box sx={{ width: "100%" }}>
-			<Paper sx={{ width: "100%", mb: 2 }}>
+	const renderFormDialog = () => {
+		if (initialFormData) {
+			return (
 				<FormDialogModal
 					application_id={selected}
+					initialFormData={initialFormData}
 					formDialogOpen={formDialogOpen}
 					handleDialogClose={handleFormDialogClose}
 				/>
+			);
+		}
+		return (
+			<Backdrop
+				sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+				open={formDialogOpen}
+				onClick={handleFormDialogClose}
+			>
+				<CircularProgress color="inherit" />
+			</Backdrop>
+		);
+	};
+
+	return (
+		<Box sx={{ width: "100%" }}>
+			<Paper sx={{ width: "100%", mb: 2 }}>
+				{formDialogOpen && <>{renderFormDialog()}</>}
+
 				<EnhancedTableToolbar handleCreate={handleCreate} />
 				<TableContainer>
 					<Table
@@ -579,40 +515,41 @@ export default function EnhancedTable() {
 						/>
 						<TableBody>
 							{visibleRows.map((row, index) => {
-								const isItemSelected = isSelected(row.id);
+								const isItemSelected = isSelected(row.application_id);
 								const labelId = `enhanced-table-checkbox-${index}`;
 
 								return (
-									<Tooltip title={row.application_id}>
-										<TableRow
-											hover
-											onClick={(event) => handleClick(event, row.id)}
-											role="checkbox"
-											aria-checked={isItemSelected}
-											tabIndex={-1}
-											key={row.id}
-											selected={isItemSelected}
-											sx={{ cursor: "pointer" }}
-										>
-											<TableCell padding="checkbox">
-												{/* <Checkbox
+									// <Tooltip title={row.application_id} key={row.application_id}>
+									<TableRow
+										hover
+										onClick={(event) => handleClick(event, row.application_id)}
+										role="checkbox"
+										aria-checked={isItemSelected}
+										tabIndex={-1}
+										key={row.application_id}
+										selected={isItemSelected}
+										sx={{ cursor: "pointer" }}
+									>
+										{/* <TableCell padding="checkbox">
+												<Checkbox
 												color="primary"
 												checked={isItemSelected}
 												inputProps={{
 													"aria-labelledby": labelId,
 												}}
-											/> */}
-											</TableCell>
-											<TableCell>{row.status}</TableCell>
-											<TableCell>{row.job.company.company_name}</TableCell>
-											<TableCell>{row.job.job_title}</TableCell>
-											<TableCell>{row.resume}</TableCell>
-											<TableCell>{row.job.salary}</TableCell>
-											<TableCell>{row.date_applied}</TableCell>
-											<TableCell>{row.deadline}</TableCell>
-											<TableCell>{row.related_information}</TableCell>
-										</TableRow>
-									</Tooltip>
+											/>
+											</TableCell> */}
+										<TableCell></TableCell>
+										<TableCell>{row.status}</TableCell>
+										<TableCell>{row.job.company.company_name}</TableCell>
+										<TableCell>{row.job.job_title}</TableCell>
+										<TableCell>{row.resume}</TableCell>
+										<TableCell>{row.job.salary}</TableCell>
+										<TableCell>{row.date_applied}</TableCell>
+										<TableCell>{row.deadline}</TableCell>
+										<TableCell>{row.related_information}</TableCell>
+									</TableRow>
+									// </Tooltip>
 								);
 							})}
 							{emptyRows > 0 && (
