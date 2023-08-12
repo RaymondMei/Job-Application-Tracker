@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 import datetime
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
@@ -61,3 +62,27 @@ def get_application(request, application_id=None):
 
     serializer = ApplicationSerializer(applications)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def create_application(request):
+    requestData = request.data
+    job_title = requestData['job_title']
+    company_name = requestData['company_name']
+    location = requestData['location']
+    salary = requestData['salary']
+    post_url = requestData['post_url']
+    date_applied = requestData['date_applied']
+    deadline = requestData['deadline']
+    resume = requestData['resume']
+    related_information = requestData['related_information']
+
+    company = Company(company_name=company_name, location=location, audit_fields_id=3)
+    company.save()
+
+    job = Job(job_title=job_title, salary=salary, company_id=company.pk, job_url=post_url, audit_fields_id=3)
+    job.save()
+
+    application = Application(status="Not Applied", resume=resume, date_applied=date_applied, deadline=deadline, related_information=related_information, job_id=job.pk, folder_id=1, user_id=2, audit_fields_id=3)
+    application.save()
+
+    return Response('nice', status=status.HTTP_201_CREATED)

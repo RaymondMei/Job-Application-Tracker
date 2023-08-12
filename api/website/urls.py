@@ -9,4 +9,5 @@ urlpatterns = [
 	path('dashboard/', views.dashboard, name='dashboard'),
 	path('dashboard/<int:folderId>', views.dashboard, name='dashboard'),
 	path('applications/<int:application_id>', views.get_application, name='get_application'),
+	path('applications/', views.create_application, name="create_application"),
 ]

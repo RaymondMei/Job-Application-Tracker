@@ -348,7 +348,7 @@ export default function EnhancedTable() {
 			job_title: "",
 			company_name: "",
 			location: "",
-			salary: 0,
+			salary: "",
 			post_url: "",
 			date_applied: "",
 			deadline: "",

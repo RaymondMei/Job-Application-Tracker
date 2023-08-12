@@ -117,20 +117,18 @@ const FormDialogModal = ({
 	const { register, control, handleSubmit } = useForm();
 
 	const handleSave = async (formValues: ApplicationData) => {
-		// const updatedData = new FormData(event.currentTarget);
-		// try {
-		// 	const response = await axios({
-		// 		method: "PUT",
-		// 		url: `http://127.0.0.1:8000/applications/${application_id}`,
-		// 		data: data,
-		// 	});
-		// 	if (response.status == 200) {
-		// 		setData(response.data ?? null);
-		// 	}
-		// } catch (error) {
-		// 	console.error("Error fetching data:", error);
-		// }
-		console.log(formValues);
+		try {
+			const response = await axios({
+				method: "POST",
+				url: `http://127.0.0.1:8000/applications/`,
+				data: formValues,
+			});
+			if (response.status == 201) {
+				console.log("CREATED:", formValues);
+			}
+		} catch (error) {
+			console.error("Error creating application:", error);
+		}
 		handleClose(false);
 	};
 	return (
