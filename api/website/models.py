@@ -52,7 +52,7 @@ class Job(models.Model):
 	job_title = models.CharField(max_length=100, null=False, blank=False)
 	job_description = models.TextField(null=True, blank=True)
 	job_url = models.URLField(null=True)
-	salary = models.DecimalField(max_digits=15, decimal_places=2)
+	salary = models.DecimalField(max_digits=15, decimal_places=2, null=True)
 	job_notes = models.TextField(null=True)
 
 	audit_fields = models.ForeignKey(Audit_Field, models.CASCADE)
@@ -66,10 +66,10 @@ class Application(models.Model):
 	folder = models.ForeignKey(Folder, models.CASCADE)
 	job = models.ForeignKey(Job, models.CASCADE)
 	status = models.CharField(max_length=25, null=False, blank=False)
-	resume = models.FileField(upload_to='resumes/')
-	date_applied = models.DateField()
-	deadline = models.DateField()
-	related_information = models.TextField()
+	resume = models.FileField(upload_to='resumes/', null=True)
+	date_applied = models.DateField(null=True)
+	deadline = models.DateField(null=True)
+	related_information = models.TextField(null=True)
 
 	audit_fields = models.ForeignKey(Audit_Field, models.CASCADE)
 
