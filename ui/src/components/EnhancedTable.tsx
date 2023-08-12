@@ -342,6 +342,19 @@ export default function EnhancedTable() {
 	};
 
 	const handleCreate = () => {
+		setInitialFormData({
+			application_id: -1,
+			status: "Not Applied",
+			job_title: "",
+			company_name: "",
+			location: "",
+			salary: 0,
+			post_url: "",
+			date_applied: "",
+			deadline: "",
+			resume: "",
+			related_information: "",
+		});
 		setFormDialogOpen(true);
 		setSelected(-1);
 	};

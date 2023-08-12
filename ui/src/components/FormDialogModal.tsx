@@ -20,6 +20,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { ApplicationData } from "./EnhancedTable";
+import { useForm } from "react-hook-form";
 
 type Props = {
 	application_id: number;
@@ -113,9 +114,10 @@ const FormDialogModal = ({
 	// 	}
 	// }, [open]);
 
-	const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-		const updatedData = new FormData(event.currentTarget);
+	const { register, control, handleSubmit } = useForm();
+
+	const handleSave = async (formValues: ApplicationData) => {
+		// const updatedData = new FormData(event.currentTarget);
 		// try {
 		// 	const response = await axios({
 		// 		method: "PUT",
@@ -128,10 +130,9 @@ const FormDialogModal = ({
 		// } catch (error) {
 		// 	console.error("Error fetching data:", error);
 		// }
-		console.log(updatedData);
+		console.log(formValues);
 		handleClose(false);
 	};
-	console.log("init", initialFormData);
 	return (
 		<>
 			<Dialog maxWidth="sm" open={open ?? false} onClose={handleClose}>
@@ -148,7 +149,8 @@ const FormDialogModal = ({
 							// backgroundColor: "orange",
 						}}
 					>
-						{/* <Grid
+						<form action="/" method="POST" onSubmit={handleSubmit(handleSave)}>
+							{/* <Grid
 							container
 							sx={{
 								marginTop: 8,
@@ -159,140 +161,159 @@ const FormDialogModal = ({
 								backgroundColor: "orange",
 							}}
 						> */}
-						{/* <ThemeProvider theme={defaultTheme}> */}
-						{/* <Grid container xs={12} sx={{ backgroundColor: "gray" }}> */}
-						{/* <CssBaseline /> */}
-						{/* <Box>
+							{/* <ThemeProvider theme={defaultTheme}> */}
+							{/* <Grid container xs={12} sx={{ backgroundColor: "gray" }}> */}
+							{/* <CssBaseline /> */}
+							{/* <Box>
 							<Box
 								component="form"
 								// onSubmit={handleSave}
 								// noValidate
 								sx={{ mt: 1 }}
 							> */}
-						<Typography variant="h4" align="center" sx={{ marginTop: 3 }}>
-							{initialFormData.job_title}
-						</Typography>
-						<Grid container direction="row" spacing={2} sx={{ marginTop: 1 }}>
-							<Grid item xs={6}>
-								<TextField
-									margin="normal"
-									fullWidth
-									id="job_title"
-									label="Job Title"
-									defaultValue={initialFormData.job_title}
-								/>
+							<Typography variant="h4" align="center" sx={{ marginTop: 3 }}>
+								{initialFormData.job_title}
+							</Typography>
+							<Grid container direction="row" spacing={2} sx={{ marginTop: 1 }}>
+								<Grid item xs={6}>
+									<TextField
+										margin="normal"
+										fullWidth
+										id="job_title"
+										{...register("job_title")}
+										label="Job Title"
+										defaultValue={initialFormData.job_title}
+									/>
+								</Grid>
+
+								<Grid item xs={6}>
+									<TextField
+										margin="normal"
+										fullWidth
+										id="company_name"
+										{...register("company_name")}
+										label="Company"
+										defaultValue={initialFormData.company_name}
+									/>
+								</Grid>
 							</Grid>
 
-							<Grid item xs={6}>
-								<TextField
-									margin="normal"
-									fullWidth
-									id="company_name"
-									label="Company"
-									defaultValue={initialFormData.company_name}
-								/>
-							</Grid>
-						</Grid>
+							<Grid container direction="row" spacing={2}>
+								<Grid item xs={8}>
+									<TextField
+										margin="normal"
+										fullWidth
+										id="location"
+										{...register("location")}
+										label="Location"
+										defaultValue={initialFormData.location}
+									/>
+								</Grid>
 
-						<Grid container direction="row" spacing={2}>
-							<Grid item xs={8}>
-								<TextField
-									margin="normal"
-									fullWidth
-									id="location"
-									label="Location"
-									defaultValue={initialFormData.location}
-								/>
-							</Grid>
-
-							<Grid item xs={4}>
-								<TextField
-									margin="normal"
-									fullWidth
-									InputProps={{
-										startAdornment: (
-											<InputAdornment position="start">$</InputAdornment>
-										),
-									}}
-									id="salary"
-									label="Salary"
-									defaultValue={initialFormData.salary}
-								/>
-							</Grid>
-						</Grid>
-
-						<Grid container direction="row">
-							<Grid item xs={12}>
-								<TextField
-									margin="normal"
-									fullWidth
-									id="urls"
-									label="Post URL"
-									defaultValue={initialFormData.post_url}
-								/>
-							</Grid>
-						</Grid>
-
-						<Grid container direction="row" spacing={2}>
-							<Grid item xs={6}>
-								<TextField
-									margin="normal"
-									fullWidth
-									id="date_applied"
-									label="Date Applied"
-									defaultValue={initialFormData.date_applied}
-								/>
+								<Grid item xs={4}>
+									<TextField
+										margin="normal"
+										fullWidth
+										InputProps={{
+											startAdornment: (
+												<InputAdornment position="start">$</InputAdornment>
+											),
+										}}
+										id="salary"
+										{...register("salary")}
+										label="Salary"
+										defaultValue={initialFormData.salary}
+									/>
+								</Grid>
 							</Grid>
 
-							<Grid item xs={6}>
-								<TextField
-									margin="normal"
-									fullWidth
-									id="deadline"
-									label="Deadline"
-									defaultValue={initialFormData.deadline}
-								/>
+							<Grid container direction="row">
+								<Grid item xs={12}>
+									<TextField
+										margin="normal"
+										fullWidth
+										id="post_url"
+										{...register("post_url")}
+										label="Post URL"
+										defaultValue={initialFormData.post_url}
+									/>
+								</Grid>
 							</Grid>
-						</Grid>
 
-						<Grid container direction="row">
-							<Grid item xs={12}>
-								<TextField
-									margin="normal"
-									fullWidth
-									id="resume"
-									label="Resume"
-									defaultValue={initialFormData.resume}
-								/>
-							</Grid>
-						</Grid>
+							<Grid container direction="row" spacing={2}>
+								<Grid item xs={6}>
+									<TextField
+										margin="normal"
+										fullWidth
+										id="date_applied"
+										{...register("date_applied")}
+										label="Date Applied"
+										defaultValue={initialFormData.date_applied}
+									/>
+								</Grid>
 
-						<Grid container direction="row">
-							<Grid item xs={12}>
-								<TextField
-									multiline
-									rows={6}
-									margin="normal"
-									fullWidth
-									id="related_information"
-									label="Relevant Information"
-									defaultValue={initialFormData.related_information}
-								/>
+								<Grid item xs={6}>
+									<TextField
+										margin="normal"
+										fullWidth
+										id="deadline"
+										{...register("deadline")}
+										label="Deadline"
+										defaultValue={initialFormData.deadline}
+									/>
+								</Grid>
 							</Grid>
-						</Grid>
-						{/* </Box>
+
+							<Grid container direction="row">
+								<Grid item xs={12}>
+									<TextField
+										margin="normal"
+										fullWidth
+										id="resume"
+										{...register("resume")}
+										label="Resume"
+										defaultValue={initialFormData.resume}
+									/>
+								</Grid>
+							</Grid>
+
+							<Grid container direction="row">
+								<Grid item xs={12}>
+									<TextField
+										multiline
+										rows={6}
+										margin="normal"
+										fullWidth
+										id="related_information"
+										{...register("related_information")}
+										label="Relevant Information"
+										defaultValue={initialFormData.related_information}
+									/>
+								</Grid>
+							</Grid>
+							{/* </Box>
 						</Box> */}
-						{/* </Grid> */}
-						{/* </ThemeProvider> */}
-						{/* </Grid> */}
+							{/* </Grid> */}
+							{/* </ThemeProvider> */}
+							{/* </Grid> */}
+							<Grid
+								container
+								justifyContent="flex-end"
+								sx={{ marginTop: 2 }}
+								spacing={1}
+							>
+								<Grid item>
+									<Button type="submit" variant="contained">
+										Save
+									</Button>
+								</Grid>
+								<Grid item>
+									<Button onClick={handleClose}>Cancel</Button>
+								</Grid>
+							</Grid>
+						</form>
 					</Grid>
 				</DialogContent>
-				<DialogActions sx={{ marginBottom: 1 }}>
-					{/* <Button type="submit" variant="contained" onClick={handleSave}>
-						Save
-					</Button>
-					<Button onClick={handleClose}>Cancel</Button> */}
-				</DialogActions>
 			</Dialog>
 		</>
 	);
