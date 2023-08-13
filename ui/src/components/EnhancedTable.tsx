@@ -388,42 +388,44 @@ export default function EnhancedTable() {
 
 	const [initialFormData, setInitialFormData] =
 		useState<null | ApplicationData>(null);
+	const [initialDataLoaded, setInitialDataLoaded] = useState<boolean>(false);
 	const getInitialFormData = async (application_id: number) => {
+		setInitialDataLoaded(false);
 		try {
 			const response = await axios({
 				method: "GET",
 				url: `http://127.0.0.1:8000/applications/${application_id}`,
 			});
-			if (response.status == 200) {
-				if (response.data) {
-					setInitialFormData({
-						application_id: response.data.application_id,
-						status: response.data.status,
-						job_title: response.data.job.job_title,
-						company_name: response.data.job.company.company_name,
-						location: response.data.job.company.location,
-						salary: response.data.job.salary,
-						post_url: response.data.job.job_url,
-						date_applied: response.data.date_applied,
-						deadline: response.data.deadline,
-						resume: response.data.resume,
-						related_information: response.data.related_information,
-					});
-				} else {
-					setInitialFormData({
-						application_id: -1,
-						status: "Not Applied",
-						job_title: "",
-						company_name: "",
-						location: "",
-						salary: 0,
-						post_url: "",
-						date_applied: "",
-						deadline: "",
-						resume: "",
-						related_information: "",
-					});
-				}
+			if (response.status == 200 && response.data) {
+				setInitialDataLoaded(true);
+				setInitialFormData({
+					application_id: response.data.application_id,
+					status: response.data.status,
+					job_title: response.data.job.job_title,
+					company_name: response.data.job.company.company_name,
+					location: response.data.job.company.location,
+					salary: response.data.job.salary,
+					post_url: response.data.job.job_url,
+					date_applied: response.data.date_applied,
+					deadline: response.data.deadline,
+					resume: response.data.resume,
+					related_information: response.data.related_information,
+				});
+			} else {
+				setInitialFormData({
+					application_id: -1,
+					status: "Not Applied",
+					job_title: "",
+					company_name: "",
+					location: "",
+					salary: 0,
+					post_url: "",
+					date_applied: "",
+					deadline: "",
+					resume: "",
+					related_information: "",
+				});
+				setFormDialogOpen(false);
 			}
 		} catch (error) {
 			console.error("Error fetching data:", error);
@@ -448,10 +450,8 @@ export default function EnhancedTable() {
 		// 	);
 		// }
 		setSelected(id === selected ? -1 : id);
-
-		setFormDialogOpen(true);
-
 		getInitialFormData(id);
+		setFormDialogOpen(true);
 	};
 
 	const handleChangePage = (event: unknown, newPage: number) => {
@@ -486,7 +486,7 @@ export default function EnhancedTable() {
 	);
 
 	const renderFormDialog = () => {
-		if (initialFormData) {
+		if (initialDataLoaded && initialFormData) {
 			return (
 				<FormDialogModal
 					application_id={selected}
