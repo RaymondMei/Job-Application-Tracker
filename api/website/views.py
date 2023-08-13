@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth import authenticate, login, logout
+from django.db import transaction
 from .models import Application
 from .models import Job
 from .models import User
@@ -56,12 +57,66 @@ def dashboard(request, folderId=1):
     serializer = ApplicationSerializer(applications, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
-def get_application(request, application_id=None):
-    applications = Application.objects.get(pk=application_id)
+@transaction.atomic # lock database on update to prevent multiple users editing 
+@api_view(['GET', 'PATCH'])
+def application(request, application_id=-1):
+    if application_id == -1:
+        return Response('Invalid Application Id', status=status.HTTP_404_NOT_FOUND)
 
-    serializer = ApplicationSerializer(applications)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        application = Application.objects.get(pk=application_id)
+
+        serializer = ApplicationSerializer(application)
+        return Response(serializer.data)
+    elif 'PATCH':
+        try:
+            application = Application.objects.select_for_update().get(pk=application_id)
+        except Application.DoesNotExist:
+            return Response('Invalid Application', status=status.HTTP_404_NOT_FOUND)
+        try:
+            job = Job.objects.select_for_update().get(pk=application.job_id)
+        except Job.DoesNotExist:
+            return Response('Invalid Job', status=status.HTTP_404_NOT_FOUND)
+        try:
+            company = Company.objects.select_for_update().get(pk=job.company_id)
+        except Company.DoesNotExist:
+            return Response('Invalid Company', status=status.HTTP_404_NOT_FOUND)
+        
+        if 'job_title' in request.data:
+            job.job_title = request.data['job_title']
+        
+        if 'company_name' in request.data:
+            company.company_name = request.data['company_name']
+        
+        if 'location' in request.data:
+            company.location = request.data['location']
+
+        if 'salary' in request.data:
+            job.salary = request.data['salary']
+
+        if 'post_url' in request.data:
+            job.job_url = request.data['post_url']
+
+        if 'date_applied' in request.data:
+            application.date_applied = request.data['date_applied']
+
+        if 'deadline' in request.data:
+            application.deadline = request.data['deadline']
+
+        if 'resume' in request.data:
+            application.resume = request.data['resume']
+
+        if 'related_information' in request.data:
+            application.related_information = request.data['related_information']
+
+        company.save()       
+        job.save()
+        application.save()
+
+        return Response("Updated Application", status=status.HTTP_200_OK)
+    else:
+        return Response('Invalid Method', status=status.HTTP_400_BAD_REQUEST)
+    
 
 @api_view(['POST'])
 def create_application(request):
@@ -85,4 +140,4 @@ def create_application(request):
     application = Application(status="Not Applied", resume=resume, date_applied=date_applied, deadline=deadline, related_information=related_information, job_id=job.pk, folder_id=1, user_id=2, audit_fields_id=3)
     application.save()
 
-    return Response('nice', status=status.HTTP_201_CREATED)
+    return Response(requestData, status=status.HTTP_201_CREATED)

@@ -8,6 +8,6 @@ urlpatterns = [
 	path('register/', views.register_page, name='register_page'),
 	path('dashboard/', views.dashboard, name='dashboard'),
 	path('dashboard/<int:folderId>', views.dashboard, name='dashboard'),
-	path('applications/<int:application_id>', views.get_application, name='get_application'),
+	path('applications/<int:application_id>', views.application, name='application'),
 	path('applications/', views.create_application, name="create_application"),
 ]

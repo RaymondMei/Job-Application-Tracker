@@ -249,7 +249,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 							direction={orderBy === headCell.id ? order : "asc"}
 							onClick={createSortHandler(headCell.id)}
 						>
-							<Typography fontWeight="bold">{headCell.label}</Typography>
+							<Typography fontWeight="bold" gutterBottom>
+								{headCell.label}
+							</Typography>
 
 							{orderBy === headCell.id ? (
 								<Box component="span" sx={visuallyHidden}>
@@ -284,11 +286,11 @@ function EnhancedTableToolbar({ handleCreate }: EnhancedTableToolbarProps) {
 			>
 				Applications
 			</Typography>
-			<Tooltip title="Filter list">
+			{/* <Tooltip title="Filter list">
 				<IconButton>
 					<FilterListIcon />
 				</IconButton>
-			</Tooltip>
+			</Tooltip> */}
 
 			<Tooltip title="Create">
 				<IconButton onClick={handleCreate}>
@@ -330,11 +332,11 @@ export default function EnhancedTable() {
 		}
 	};
 
+	const [formDialogOpen, setFormDialogOpen] = useState<boolean>(false);
+
 	useEffect(() => {
 		getDashboardData();
-	}, []);
-
-	const [formDialogOpen, setFormDialogOpen] = useState<boolean>(false);
+	}, [formDialogOpen]);
 
 	const handleFormDialogClose = () => {
 		setFormDialogOpen(false);

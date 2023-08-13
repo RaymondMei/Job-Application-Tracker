@@ -30,6 +30,7 @@ type Props = {
 };
 
 const FormDialogModal = ({
+	application_id,
 	initialFormData,
 	formDialogOpen: open,
 	handleDialogClose: handleClose,
@@ -116,7 +117,7 @@ const FormDialogModal = ({
 
 	const { register, control, handleSubmit } = useForm();
 
-	const handleSave = async (formValues: ApplicationData) => {
+	const handleCreate = async (formValues: ApplicationData) => {
 		try {
 			const response = await axios({
 				method: "POST",
@@ -128,6 +129,22 @@ const FormDialogModal = ({
 			}
 		} catch (error) {
 			console.error("Error creating application:", error);
+		}
+		handleClose(false);
+	};
+
+	const handleEdit = async (formValues: ApplicationData) => {
+		try {
+			const response = await axios({
+				method: "PATCH",
+				url: `http://127.0.0.1:8000/applications/${application_id}`,
+				data: formValues,
+			});
+			if (response.status == 200) {
+				console.log("UPDATED:", formValues);
+			}
+		} catch (error) {
+			console.error("Error updating application:", error);
 		}
 		handleClose(false);
 	};
@@ -147,7 +164,13 @@ const FormDialogModal = ({
 							// backgroundColor: "orange",
 						}}
 					>
-						<form action="/" method="POST" onSubmit={handleSubmit(handleSave)}>
+						<form
+							action="/"
+							method="POST"
+							onSubmit={handleSubmit(
+								application_id !== -1 ? handleEdit : handleCreate
+							)}
+						>
 							{/* <Grid
 							container
 							sx={{
@@ -180,6 +203,7 @@ const FormDialogModal = ({
 										id="job_title"
 										{...register("job_title")}
 										label="Job Title"
+										required
 										defaultValue={initialFormData.job_title}
 									/>
 								</Grid>
@@ -191,6 +215,7 @@ const FormDialogModal = ({
 										id="company_name"
 										{...register("company_name")}
 										label="Company"
+										required
 										defaultValue={initialFormData.company_name}
 									/>
 								</Grid>
@@ -302,7 +327,7 @@ const FormDialogModal = ({
 							>
 								<Grid item>
 									<Button type="submit" variant="contained">
-										Save
+										{application_id !== -1 ? "Save" : "Add"}
 									</Button>
 								</Grid>
 								<Grid item>
