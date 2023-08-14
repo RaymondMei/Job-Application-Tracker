@@ -19,11 +19,6 @@ from .serializers import FolderSerializer
 
 # Create your views here.
 
-@api_view(['GET'])
-def get_routes(request):
-    routes = [{'test': 'test_route'}, {'test2': 'test_route2'}]
-    return Response(routes)
-
 def index(request):
 	return render(request, 'index.html')
 

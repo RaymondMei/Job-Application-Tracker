@@ -39,87 +39,6 @@ const FormDialogModal = ({
 	handleDialogClose: handleClose,
 	handleDelete,
 }: Props) => {
-	console.log("a", application_id);
-	// const defaultTheme = useTheme();
-	// const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-	// 	event.preventDefault();
-	// 	console.log("submitted");
-	// };
-
-	// const [data, setData] = useState<ApplicationData>({
-	// 	application_id: -1,
-	// 	status: "Not Applied",
-	// 	job_title: "",
-	// 	company_name: "",
-	// 	location: "",
-	// 	salary: 0,
-	// 	post_url: "",
-	// 	date_applied: "",
-	// 	deadline: "",
-	// 	resume: "",
-	// 	related_information: "",
-	// });
-	// useState({
-	// 	id: 1,
-	// 	company_name: "ABC Tech Solutions",
-	// 	job_title: "Software Engineer",
-	// 	resume: "I am an experienced software engineer...",
-	// 	date_applied: "7/15/2023",
-	// 	salary: 85000,
-	// 	location: "San Francisco, CA",
-	// 	related_information: "Technical skills: Python, JavaScript, C++",
-	// 	urls: "www.example.com/job1",
-	// 	contacts: "john.doe@example.com",
-	// });
-
-	// const getInitialFormData = async () => {
-	// 	try {
-	// 		const response = await axios({
-	// 			method: "GET",
-	// 			url: `http://127.0.0.1:8000/applications/${application_id}`,
-	// 		});
-	// 		if (response.status == 200) {
-	// 			if (response.data) {
-	// 				setData({
-	// 					application_id: response.data.application_id,
-	// 					status: response.data.status,
-	// 					job_title: response.data.job.job_title,
-	// 					company_name: response.data.job.company.company_name,
-	// 					location: response.data.job.company.location,
-	// 					salary: response.data.job.salary,
-	// 					post_url: response.data.job.job_url,
-	// 					date_applied: response.data.date_applied,
-	// 					deadline: response.data.deadline,
-	// 					resume: response.data.resume,
-	// 					related_information: response.data.related_information,
-	// 				});
-	// 			} else {
-	// 				setData({
-	// 					application_id: -1,
-	// 					status: "Not Applied",
-	// 					job_title: "",
-	// 					company_name: "",
-	// 					location: "",
-	// 					salary: 0,
-	// 					post_url: "",
-	// 					date_applied: "",
-	// 					deadline: "",
-	// 					resume: "",
-	// 					related_information: "",
-	// 				});
-	// 			}
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Error fetching data:", error);
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	if (open && (application_id ?? -1) !== -1) {
-	// 		getInitialFormData();
-	// 	}
-	// }, [open]);
-
 	const { register, control, handleSubmit } = useForm();
 
 	const handleCreate = async (formValues: ApplicationData) => {
@@ -177,27 +96,6 @@ const FormDialogModal = ({
 								application_id !== -1 ? handleEdit : handleCreate
 							)}
 						>
-							{/* <Grid
-							container
-							sx={{
-								marginTop: 8,
-								display: "flex",
-								flexDirection: "column",
-								justifyContent: "center",
-								alignItems: "center",
-								backgroundColor: "orange",
-							}}
-						> */}
-							{/* <ThemeProvider theme={defaultTheme}> */}
-							{/* <Grid container xs={12} sx={{ backgroundColor: "gray" }}> */}
-							{/* <CssBaseline /> */}
-							{/* <Box>
-							<Box
-								component="form"
-								// onSubmit={handleSave}
-								// noValidate
-								sx={{ mt: 1 }}
-							> */}
 							<Typography variant="h4" align="center" sx={{ marginTop: 3 }}>
 								{initialFormData.job_title}
 							</Typography>
@@ -320,11 +218,6 @@ const FormDialogModal = ({
 									/>
 								</Grid>
 							</Grid>
-							{/* </Box>
-						</Box> */}
-							{/* </Grid> */}
-							{/* </ThemeProvider> */}
-							{/* </Grid> */}
 							<IconButton
 								onClick={() => handleDelete(application_id)}
 								sx={{ position: "absolute", bottom: 15, left: 15 }}

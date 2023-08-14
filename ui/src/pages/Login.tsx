@@ -26,17 +26,6 @@ const Login = ({ handleLoginStatus }: Props) => {
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		// fetch(`http://127.0.0.1:8000/login/`, {
-		// 	method: "POST",
-		// 	headers: {
-		// 		"Content-type": "application/json",
-		// 	},
-		// 	body: JSON.stringify(data),
-		// });
-		// console.log({
-		// 	username: data.get("username"),
-		// 	password: data.get("password"),
-		// });
 
 		try {
 			const response = await axios({
@@ -51,13 +40,12 @@ const Login = ({ handleLoginStatus }: Props) => {
 			}
 		} catch (error: Error | AxiosError) {
 			if (error.response) {
-				console.log("response", error);
+				console.error("response", error);
 			} else if (error.request) {
-				console.log("request", error);
+				console.error("request", error);
 			} else {
-				console.log(error);
+				console.error(error);
 			}
-			// console.log(error.config);
 		}
 	};
 
