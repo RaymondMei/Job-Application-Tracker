@@ -58,17 +58,27 @@ def dashboard(request, folderId=1):
     return Response(serializer.data)
 
 @transaction.atomic # lock database on update to prevent multiple users editing 
-@api_view(['GET', 'PATCH'])
+@api_view(['GET', 'PATCH', 'DELETE'])
 def application(request, application_id=-1):
     if application_id == -1:
         return Response('Invalid Application Id', status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        application = Application.objects.get(pk=application_id)
+        try:
+            application = Application.objects.get(pk=application_id)
+        except Application.DoesNotExist:
+            return Response('Invalid Application', status=status.HTTP_404_NOT_FOUND)
 
         serializer = ApplicationSerializer(application)
         return Response(serializer.data)
-    elif 'PATCH':
+
+    elif request.method == 'PATCH':
+        for key, value in request.data.items():
+            if not value:
+                request.data[key] = None
+            else:
+                request.data[key] = request.data[key].strip()
+
         try:
             application = Application.objects.select_for_update().get(pk=application_id)
         except Application.DoesNotExist:
@@ -92,7 +102,9 @@ def application(request, application_id=-1):
             company.location = request.data['location']
 
         if 'salary' in request.data:
-            job.salary = request.data['salary']
+            salary = None
+            if request.data['salary']:
+                job.salary = int(request.data['salary'])
 
         if 'post_url' in request.data:
             job.job_url = request.data['post_url']
@@ -114,17 +126,60 @@ def application(request, application_id=-1):
         application.save()
 
         return Response("Updated Application", status=status.HTTP_200_OK)
+
+    elif request.method == 'DELETE':
+
+        try:
+            application = Application.objects.get(pk=application_id)
+        except Application.DoesNotExist:
+            return Response('Invalid Application', status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            job = Job.objects.get(pk=application.job_id)
+        except Job.DoesNotExist:
+            return Response('Invalid Job', status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            company = Company.objects.get(pk=job.company_id)
+        except Company.DoesNotExist:
+            return Response('Invalid Company', status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            application.delete()
+        except ProtectedError:
+            return Response('Application cannot be deleted', status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            job.delete()
+        except ProtectedError:
+            return Response('Job cannot be deleted', status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            company.delete()
+        except ProtectedError:
+            return Response('Company cannot be deleted', status=status.HTTP_400_BAD_REQUEST)
+        
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     else:
         return Response('Invalid Method', status=status.HTTP_400_BAD_REQUEST)
     
 
 @api_view(['POST'])
 def create_application(request):
+    for key, value in request.data.items():
+        if not value:
+            request.data[key] = None
+        else:
+            request.data[key] = request.data[key].strip()
     requestData = request.data
     job_title = requestData['job_title']
     company_name = requestData['company_name']
     location = requestData['location']
-    salary = requestData['salary']
+    salary = None
+    if requestData['salary']:
+        salary = int(requestData['salary'])
     post_url = requestData['post_url']
     date_applied = requestData['date_applied']
     deadline = requestData['deadline']

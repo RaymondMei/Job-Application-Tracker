@@ -316,6 +316,9 @@ export type ApplicationData = {
 };
 
 export default function EnhancedTable() {
+	const [showActionId, setShowActionId] = useState(-1);
+	const [deleting, setDeleting] = useState<boolean>(false);
+
 	const [rows, setRows] = useState<readonly Row[]>([]);
 
 	const getDashboardData = async () => {
@@ -340,24 +343,6 @@ export default function EnhancedTable() {
 
 	const handleFormDialogClose = () => {
 		setFormDialogOpen(false);
-		setSelected(-1);
-	};
-
-	const handleCreate = () => {
-		setInitialFormData({
-			application_id: -1,
-			status: "Not Applied",
-			job_title: "",
-			company_name: "",
-			location: "",
-			salary: "",
-			post_url: "",
-			date_applied: "",
-			deadline: "",
-			resume: "",
-			related_information: "",
-		});
-		setFormDialogOpen(true);
 		setSelected(-1);
 	};
 
@@ -390,6 +375,10 @@ export default function EnhancedTable() {
 		useState<null | ApplicationData>(null);
 	const [initialDataLoaded, setInitialDataLoaded] = useState<boolean>(false);
 	const getInitialFormData = async (application_id: number) => {
+		if (deleting) {
+			setDeleting(false);
+			return;
+		}
 		setInitialDataLoaded(false);
 		try {
 			const response = await axios({
@@ -430,6 +419,25 @@ export default function EnhancedTable() {
 		} catch (error) {
 			console.error("Error fetching data:", error);
 		}
+	};
+
+	const handleCreate = () => {
+		setInitialFormData({
+			application_id: -1,
+			status: "Not Applied",
+			job_title: "",
+			company_name: "",
+			location: "",
+			salary: "",
+			post_url: "",
+			date_applied: "",
+			deadline: "",
+			resume: "",
+			related_information: "",
+		});
+		setInitialDataLoaded(true);
+		setFormDialogOpen(true);
+		setSelected(-1);
 	};
 
 	const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
@@ -493,6 +501,7 @@ export default function EnhancedTable() {
 					initialFormData={initialFormData}
 					formDialogOpen={formDialogOpen}
 					handleDialogClose={handleFormDialogClose}
+					handleDelete={handleDelete}
 				/>
 			);
 		}
@@ -505,6 +514,22 @@ export default function EnhancedTable() {
 				<CircularProgress color="inherit" />
 			</Backdrop>
 		);
+	};
+
+	const handleDelete = async (application_id: number) => {
+		setDeleting(true);
+		try {
+			const response = await axios({
+				method: "DELETE",
+				url: `http://127.0.0.1:8000/applications/${application_id}`,
+			});
+			if (response.status == 204) {
+				console.log("DELETED application_id:", application_id);
+			}
+		} catch (error) {
+			console.error("Error deleting application:", error);
+		}
+		handleFormDialogClose();
 	};
 
 	return (
@@ -544,6 +569,10 @@ export default function EnhancedTable() {
 										key={row.application_id}
 										selected={isItemSelected}
 										sx={{ cursor: "pointer" }}
+										onMouseEnter={() => {
+											setShowActionId(row.application_id);
+										}}
+										onMouseLeave={() => setShowActionId(-1)}
 									>
 										{/* <TableCell padding="checkbox">
 												<Checkbox
@@ -563,6 +592,15 @@ export default function EnhancedTable() {
 										<TableCell>{row.date_applied}</TableCell>
 										<TableCell>{row.deadline}</TableCell>
 										<TableCell>{row.related_information}</TableCell>
+										<TableCell sx={{ p: 0 }}>
+											{row.application_id === showActionId && (
+												<IconButton
+													onClick={() => handleDelete(row.application_id)}
+												>
+													<DeleteIcon></DeleteIcon>
+												</IconButton>
+											)}
+										</TableCell>
 									</TableRow>
 									// </Tooltip>
 								);

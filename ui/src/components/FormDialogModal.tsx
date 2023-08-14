@@ -6,11 +6,13 @@ import {
 	CssBaseline,
 	FormControlLabel,
 	Grid,
+	IconButton,
 	InputAdornment,
 	ThemeProvider,
 	Typography,
 } from "@mui/material";
 import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -27,6 +29,7 @@ type Props = {
 	initialFormData: ApplicationData;
 	formDialogOpen: boolean;
 	handleDialogClose: (open: boolean) => void;
+	handleDelete: (application_id: number) => void;
 };
 
 const FormDialogModal = ({
@@ -34,7 +37,9 @@ const FormDialogModal = ({
 	initialFormData,
 	formDialogOpen: open,
 	handleDialogClose: handleClose,
+	handleDelete,
 }: Props) => {
+	console.log("a", application_id);
 	// const defaultTheme = useTheme();
 	// const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 	// 	event.preventDefault();
@@ -148,6 +153,7 @@ const FormDialogModal = ({
 		}
 		handleClose(false);
 	};
+
 	return (
 		<>
 			<Dialog maxWidth="sm" open={open ?? false} onClose={handleClose}>
@@ -319,6 +325,12 @@ const FormDialogModal = ({
 							{/* </Grid> */}
 							{/* </ThemeProvider> */}
 							{/* </Grid> */}
+							<IconButton
+								onClick={() => handleDelete(application_id)}
+								sx={{ position: "absolute", bottom: 15, left: 15 }}
+							>
+								<DeleteIcon sx={{ fontSize: 30 }}></DeleteIcon>
+							</IconButton>
 							<Grid
 								container
 								justifyContent="flex-end"
