@@ -97,9 +97,7 @@ def application(request, application_id=-1):
             company.location = request.data['location']
 
         if 'salary' in request.data:
-            salary = None
-            if request.data['salary']:
-                job.salary = int(request.data['salary'])
+            job.salary = request.data['salary']
 
         if 'post_url' in request.data:
             job.job_url = request.data['post_url']
@@ -172,9 +170,7 @@ def create_application(request):
     job_title = requestData['job_title']
     company_name = requestData['company_name']
     location = requestData['location']
-    salary = None
-    if requestData['salary']:
-        salary = int(requestData['salary'])
+    salary = requestData['salary']
     post_url = requestData['post_url']
     date_applied = requestData['date_applied']
     deadline = requestData['deadline']
