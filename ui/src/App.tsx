@@ -1,14 +1,11 @@
-// import { Container, Grid } from "@mui/material";
 import "./App.css";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import Dashboard from "./pages/Dashboard";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import { Button, Grid, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import FormDialogModal from "./components/FormDialogModal";
+import { Button, Grid } from "@mui/material";
+import { useState } from "react";
 
 const App = () => {
 	const [loggedIn, setLoggedIn] = useState<boolean>(false);

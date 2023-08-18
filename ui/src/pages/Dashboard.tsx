@@ -1,6 +1,5 @@
-import { Grid, Typography, cardClasses, useTheme } from "@mui/material";
+import { Grid, Typography, useTheme } from "@mui/material";
 import EnhancedTable from "../components/EnhancedTable";
-import { useEffect, useState } from "react";
 
 const Dashboard = () => {
 	const theme = useTheme();

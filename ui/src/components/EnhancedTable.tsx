@@ -1,5 +1,4 @@
 import * as React from "react";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,13 +11,11 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
 import AddIcon from "@mui/icons-material/Add";
 import { visuallyHidden } from "@mui/utils";
 import axios from "axios";
@@ -27,7 +24,7 @@ import FormDialogModal from "./FormDialogModal";
 import { Backdrop, CircularProgress } from "@mui/material";
 
 type Data = {
-	id: number;
+	application_id: number;
 	status: number;
 	company_name: string;
 	job_title: string;
@@ -60,7 +57,7 @@ type Row = {
 			company_name: string;
 			location: string;
 			website: string;
-			contact: null | string;
+			contact: string;
 			audit_fields: number;
 		};
 		job_title: string;
@@ -109,7 +106,7 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = "asc" | "desc";
 
-function getComparator<Key extends keyof any>(
+function getComparator<Key extends keyof Data>(
 	order: Order,
 	orderBy: Key
 ): (
@@ -125,11 +122,8 @@ function getComparator<Key extends keyof any>(
 // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
 // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
 // with exampleArray.slice().sort(exampleComparator)
-function stableSort<Row>(
-	array: readonly Row[],
-	comparator: (a: T, b: T) => number
-) {
-	const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+function stableSort<Row>(array: Row[], comparator: (a: Row, b: Row) => number) {
+	const stabilizedThis = array.map((el, index) => [el, index] as [Row, number]);
 	stabilizedThis.sort((a, b) => {
 		const order = comparator(a[0], b[0]);
 		if (order !== 0) {
@@ -199,10 +193,7 @@ const headCells: readonly HeadCell[] = [
 
 type EnhancedTableProps = {
 	numSelected: number;
-	onRequestSort: (
-		event: React.MouseEvent<unknown>,
-		property: keyof Data
-	) => void;
+	onRequestSort: (property: keyof Data) => void;
 	// onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	order: Order;
 	orderBy: string;
@@ -218,10 +209,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 		// rowCount,
 		onRequestSort,
 	} = props;
-	const createSortHandler =
-		(property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-			onRequestSort(event, property);
-		};
+	const createSortHandler = (property: keyof Data) => () => {
+		onRequestSort(property);
+	};
 
 	return (
 		<TableHead>
@@ -319,7 +309,7 @@ export default function EnhancedTable() {
 	const [showActionId, setShowActionId] = useState(-1);
 	const [deleting, setDeleting] = useState<boolean>(false);
 
-	const [rows, setRows] = useState<readonly Row[]>([]);
+	const [rows, setRows] = useState<Data[]>([]);
 
 	const getDashboardData = async () => {
 		try {
@@ -328,7 +318,23 @@ export default function EnhancedTable() {
 				url: "http://127.0.0.1:8000/dashboard/",
 			});
 			if (response.status == 200) {
-				setRows(response.data ?? []);
+				setRows(
+					(response.data ?? []).map((app: Row) => {
+						return {
+							application_id: app.application_id,
+							status: app.status,
+							job_title: app.job.job_title,
+							company_name: app.job.company.company_name,
+							location: app.job.company.location,
+							salary: app.job.salary,
+							post_url: app.job.job_url,
+							date_applied: app.date_applied,
+							deadline: app.deadline,
+							resume: app.resume,
+							related_information: app.related_information,
+						};
+					})
+				);
 			}
 		} catch (error) {
 			console.error("Error fetching data:", error);
@@ -347,16 +353,13 @@ export default function EnhancedTable() {
 	};
 
 	const [order, setOrder] = React.useState<Order>("asc");
-	const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
+	const [orderBy, setOrderBy] = React.useState<keyof Data>("application_id");
 	const [selected, setSelected] = React.useState<number>(-1);
 	const [page, setPage] = React.useState(0);
 	const [dense, setDense] = React.useState(false);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-	const handleRequestSort = (
-		event: React.MouseEvent<unknown>,
-		property: keyof Data
-	) => {
+	const handleRequestSort = (property: keyof Data) => {
 		const isAsc = orderBy === property && order === "asc";
 		setOrder(isAsc ? "desc" : "asc");
 		setOrderBy(property);
@@ -428,7 +431,7 @@ export default function EnhancedTable() {
 			job_title: "",
 			company_name: "",
 			location: "",
-			salary: "",
+			salary: "" as unknown as number,
 			post_url: "",
 			date_applied: "",
 			deadline: "",
@@ -440,13 +443,17 @@ export default function EnhancedTable() {
 		setSelected(-1);
 	};
 
-	const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+	const handleClick = (id: number) => {
 		setSelected(id === selected ? -1 : id);
 		getInitialFormData(id);
 		setFormDialogOpen(true);
 	};
 
-	const handleChangePage = (event: unknown, newPage: number) => {
+	const handleChangePage = (
+		event: React.MouseEvent<HTMLButtonElement> | null,
+		newPage: number
+	) => {
+		event?.preventDefault();
 		setPage(newPage);
 	};
 
@@ -468,7 +475,7 @@ export default function EnhancedTable() {
 	const emptyRows =
 		page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-	const visibleRows: Row[] = React.useMemo(
+	const visibleRows: Data[] = React.useMemo(
 		() =>
 			stableSort(rows, getComparator(order, orderBy)).slice(
 				page * rowsPerPage,
@@ -538,15 +545,15 @@ export default function EnhancedTable() {
 							rowCount={rows.length}
 						/>
 						<TableBody>
-							{visibleRows.map((row, index) => {
+							{visibleRows.map((row) => {
 								const isItemSelected = isSelected(row.application_id);
-								const labelId = `enhanced-table-checkbox-${index}`;
+								// const labelId = `enhanced-table-checkbox-${index}`;
 
 								return (
 									// <Tooltip title={row.application_id} key={row.application_id}>
 									<TableRow
 										hover
-										onClick={(event) => handleClick(event, row.application_id)}
+										onClick={() => handleClick(row.application_id)}
 										role="checkbox"
 										aria-checked={isItemSelected}
 										tabIndex={-1}
@@ -569,10 +576,10 @@ export default function EnhancedTable() {
 											</TableCell> */}
 										<TableCell></TableCell>
 										<TableCell>{row.status}</TableCell>
-										<TableCell>{row.job.company.company_name}</TableCell>
-										<TableCell>{row.job.job_title}</TableCell>
+										<TableCell>{row.company_name}</TableCell>
+										<TableCell>{row.job_title}</TableCell>
 										<TableCell>{row.resume}</TableCell>
-										<TableCell>{row.job.salary}</TableCell>
+										<TableCell>{row.salary}</TableCell>
 										<TableCell>{row.date_applied}</TableCell>
 										<TableCell>{row.deadline}</TableCell>
 										<TableCell>{row.related_information}</TableCell>

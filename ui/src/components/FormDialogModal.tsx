@@ -1,28 +1,12 @@
-import { useTheme } from "@emotion/react";
-import {
-	Box,
-	Checkbox,
-	Container,
-	CssBaseline,
-	FormControlLabel,
-	Grid,
-	IconButton,
-	InputAdornment,
-	ThemeProvider,
-	Typography,
-} from "@mui/material";
+import { Grid, IconButton, InputAdornment, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
-import React, { useState, useEffect } from "react";
 import { ApplicationData } from "./EnhancedTable";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 
 type Props = {
 	application_id: number;
@@ -39,9 +23,9 @@ const FormDialogModal = ({
 	handleDialogClose: handleClose,
 	handleDelete,
 }: Props) => {
-	const { register, control, handleSubmit } = useForm();
+	const { register, handleSubmit } = useForm();
 
-	const handleCreate = async (formValues: ApplicationData) => {
+	const handleCreate = async (formValues: FieldValues) => {
 		try {
 			const response = await axios({
 				method: "POST",
@@ -57,7 +41,7 @@ const FormDialogModal = ({
 		handleClose(false);
 	};
 
-	const handleEdit = async (formValues: ApplicationData) => {
+	const handleEdit = async (formValues: FieldValues) => {
 		try {
 			const response = await axios({
 				method: "PATCH",
@@ -236,7 +220,7 @@ const FormDialogModal = ({
 									</Button>
 								</Grid>
 								<Grid item>
-									<Button onClick={handleClose}>Cancel</Button>
+									<Button onClick={() => handleClose(false)}>Cancel</Button>
 								</Grid>
 							</Grid>
 						</form>
