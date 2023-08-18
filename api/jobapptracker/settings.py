@@ -85,8 +85,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'JobApplicationTracker',
-        'USER': 'raymond',
-        'PASSWORD': 'password',
+        'USER': config("POSTGRES_DB_USER"),
+        'PASSWORD': config("POSTGRES_DB_PASSWORD"),
     }
 }
 

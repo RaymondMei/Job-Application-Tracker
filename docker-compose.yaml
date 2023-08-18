@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: jatuser
+      POSTGRES_PASSWORD: jatpass
+      POSTGRES_DB: JobApplicationTracker
+
+  backend:
+    build:
+      context: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./ui
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
