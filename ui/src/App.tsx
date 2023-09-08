@@ -1,7 +1,7 @@
 import "./App.css";
 import ResponsiveAppBar from "./components/ResponsiveAppBar";
 import Dashboard from "./pages/Dashboard";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { Button, Grid } from "@mui/material";
@@ -32,7 +32,7 @@ const App = () => {
 
 	return (
 		<>
-			<BrowserRouter>
+			<Router>
 				<Grid container spacing={0}>
 					<Grid item xs={12}>
 						<ResponsiveAppBar loggedIn={loggedIn} />
@@ -73,7 +73,7 @@ const App = () => {
 						</Routes>
 					</Grid>
 				</Grid>
-			</BrowserRouter>
+			</Router>
 		</>
 	);
 };
