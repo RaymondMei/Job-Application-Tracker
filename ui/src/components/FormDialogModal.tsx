@@ -178,19 +178,6 @@ const FormDialogModal = ({
 							<Grid container direction="row">
 								<Grid item xs={12}>
 									<TextField
-										margin="normal"
-										fullWidth
-										id="resume"
-										{...register("resume")}
-										label="Resume"
-										defaultValue={initialFormData.resume}
-									/>
-								</Grid>
-							</Grid>
-
-							<Grid container direction="row">
-								<Grid item xs={12}>
-									<TextField
 										multiline
 										rows={6}
 										margin="normal"
@@ -202,6 +189,20 @@ const FormDialogModal = ({
 									/>
 								</Grid>
 							</Grid>
+
+							<Grid
+								container
+								direction="row"
+								sx={{ paddingTop: 1, paddingBottom: 2 }}
+							>
+								<Grid item xs={12}>
+									<Button variant="contained" component="label" fullWidth>
+										Upload Resume
+										<input type="file" hidden />
+									</Button>
+								</Grid>
+							</Grid>
+
 							<IconButton
 								onClick={() => handleDelete(application_id)}
 								sx={{ position: "absolute", bottom: 15, left: 15 }}
