@@ -2,9 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "aws" ]
+    branches: [ "dockerize" ]
 
 jobs:
 
@@ -21,6 +19,6 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - name: Build the Docker image
       # run: docker build -t job-application-tracker .
-      run: docker build . --file Dockerfile --tag job-application-tracker:$(date +%s)
+      run: docker build . --file ./ui/Dockerfile --tag job-application-tracker:$(date +%s)
     - name: Push to Dockerhub
       run: docker push rxmei/job-application-tracker:latest
