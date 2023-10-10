@@ -1,0 +1,20 @@
+name: AWS Deployment
+
+on:
+  workflow_runs:
+    workflows: [ "Docker Image CI" ]
+    types:
+      - completed
+
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+    steps:
+    - name: Pull Docker Image
+      run: sudo docker pull rxmei/job-application-tracker:latest
+    - name: Delete Old Container
+      run: sudo docker rm -f jat-container || true
+    - name: Run Container
+      run: docker run -d -p 8080:8080 --name jat-container rxmei/job-application-tracker
